@@ -1,0 +1,35 @@
+aquifer.display_endpoint:
+  path: '/aquifer/display_endpoint'
+  defaults:
+    _controller: '\Drupal\aquifer\Controller\RetrieveEndpoint::getRESTEndpoint'
+    _title: 'Endpoint for Aquifer service'
+  requirements:
+    _permission: 'access content'
+aquifer.display_total_aquifers:
+  path: '/aquifer/display_count'
+  defaults:
+    _controller: '\Drupal\aquifer\Controller\DisplayAquifers::getTotalAquifers'
+    _title: 'Number of aquifers tracked world-wide'
+  requirements:
+    _permission: 'access content'
+aquifer.display_aquifers_in_region:
+  path: '/aquifer/display_count/{region}'
+  defaults:
+    _controller: '\Drupal\aquifer\Controller\DisplayAquifers::getTotalAquifers'
+    _title_callback: '\Drupal\aquifer\Controller\DisplayAquifers::totalAquifersTitleCallback'
+  requirements:
+    _permission: 'access content'
+aquifer.display_aquifer_names:
+  path: '/aquifer/display_aquifers'
+  defaults:
+    _controller: '\Drupal\aquifer\Controller\DisplayAquifers::getAquiferNames'
+    _title: 'List of aquifers'
+  requirements:
+    _permission: 'access content'
+aquifer.display_aquifer_data:
+  path: '/aquifer/display_aquifer/{aquifer_name}'
+  defaults:
+    _controller: '\Drupal\aquifer\Controller\DisplayAquifers::getAquiferData'
+    _title_callback: '\Drupal\aquifer\Controller\DisplayAquifers::aquiferDataTitleCallback'
+  requirements:
+    _permission: 'access content'
