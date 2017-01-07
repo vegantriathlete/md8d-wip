@@ -3,6 +3,7 @@
 namespace Drupal\aquifer;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -102,22 +103,17 @@ class AquiferManagerService implements AquiferRetrievalServiceInterface {
    * @param string $aquifer_name
    *   The name of the aquifer to retrieve
    *
-   * @return EntityInterface $node
+   * @return NodeInterface $node
    *   The fully loaded node entity
    */
   private function getAquifer($aquifer_name) {
-    // @todo: This seems terribly inefficient. I need to see about a better way
-    //        to do this.
-    $query = $this->nodeStorage->getQuery()
+    $result = $this->nodeStorage->getQuery()
       ->condition('type', 'aquifer')
-      ->condition('title', $aquifer_name);
+      ->condition('title', $aquifer_name)
+      ->range(0, 1)
+      ->execute();
 
-    $entity_ids = $query->execute();
-    $nodes = $this->nodeStorage->loadMultiple($entity_ids);
-
-    foreach ($nodes as $node) {
-      return $node;
-    }
+    return Node::load(reset($result));
   }
 
 }
