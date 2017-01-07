@@ -3,7 +3,7 @@
 namespace Drupal\aquifer;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\node\NodeInterface;
+use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
