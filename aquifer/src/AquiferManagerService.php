@@ -3,7 +3,6 @@
 namespace Drupal\aquifer;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -41,6 +40,13 @@ class AquiferManagerService implements AquiferRetrievalServiceInterface {
    * {@inheritdoc}
    */
   private function createAquifer(array $aquifer_data) {
+    $values = array(
+      'title' => $aquifer_data['name'],
+      'field_aquifer_coordinates' => $aquifer_data['coordinates'],
+      'field_aquifer_status' => $aquifer_data['status'],
+      'field_aquifer_volume' => $aquifer_data['volume']
+    );
+    $this->nodeStorage->create($values);
   }
 
   /**
@@ -48,6 +54,13 @@ class AquiferManagerService implements AquiferRetrievalServiceInterface {
    */
   public function readAquifer($aquifer_name) {
     $node = $this->getAquifer($aquifer_name);
+    $aquifer_data = array(
+      'name' => $node->title,
+      'coordinates' => $node->field_aquifer_coordinates->value(),
+      'status' => $node->field_aquifer_status->value(),
+      'volume' => $node->field_aquifer_volume->value()
+    );
+    return $aquifer_data;
   }
 
   /**
@@ -89,8 +102,8 @@ class AquiferManagerService implements AquiferRetrievalServiceInterface {
    * @param string $aquifer_name
    *   The name of the aquifer to retrieve
    *
-   * @return NodeInterface $node
-   *   The fully loaded node interface
+   * @return EntityInterface $node
+   *   The fully loaded node entity
    */
   private function getAquifer($aquifer_name) {
     // @todo: This seems terribly inefficient. I need to see about a better way
@@ -102,7 +115,9 @@ class AquiferManagerService implements AquiferRetrievalServiceInterface {
     $entity_ids = $query->execute();
     $nodes = $this->nodeStorage->loadMultiple($entity_ids);
 
-    // @todo: I still need to return the NodeInterface
+    foreach ($nodes as $node) {
+      return $node;
+    }
   }
 
 }
