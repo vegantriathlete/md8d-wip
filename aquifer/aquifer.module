@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Used to manage aquifer content.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function aquifer_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.aquifer':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Aquifer module is a custom module that is responsible for defining the Aquifer content type and providing functionality for managing the content type.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Adding, editing, and viewing aquifers') . '</dt>';
+      $output .= '<dd>' . t('It is not intended that the pieces of content will be created and edited directly. Rather, there is a cron job that will take care of adding and updating these pieces of content. However, as aquifers are actual pieces of content on the site, users with elevated privileges do have the ability to do all the standard things they can do with any other content types. The module has defined various paths to allow you to view different information about the module itself as well as the aquifer pieces of content.') . '</dd>';
+      $output .= '<dt>' . t('A few helpful notes') . '</dt>';
+      $output .= '<dd>' . t('This module is intended to demonstrate certain concepts. It is not intended to necessarily fully implement all the details. For instance, one of the concepts this module demonstrates is the creation and use of a service. The "aquifer retrieval service" does not actually call out to an external resource; it just hard codes responses. I have included comments throughout the code to indicate where I have taken other similar shortcuts.') . '</dd>';
+      $output .= '</dl>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Queues aquifer updates once their refresh interval has elapsed.
+ */
+function aquifer_cron() {
+  /**
+   * Note: If there were actually a service that tracked aquifers throughout the
+   *       world, there would likely be quite a large amount of data. This cron
+   *       job would have to be significantly more sophisticated in how it
+   *       queues items to be processed. In the case of this module, however,
+   *       I know that we've only got three aquifers defined. Knowing this,
+   *       I could actually choose to just process everything right here in
+   *       job. Instead, I want to illustrate how to use the queue and cron
+   *       queue workers.
+   */
+  $queue = \Drupal::queue('aquifer_updates');
+
+  $aquifer_names = \Drupal::entityManager()->get('aquifer.aquifer_retrieval_service')->getAquiferNames();
+  foreach ($aquifer_names as $aquifer_name) {
+    if ($queue->createItem($aquifer_name)) {
+      // Add timestamp to avoid queueing item more than once.
+      $aquifer_name->setQueuedTime(REQUEST_TIME);
+      $aquifer_name->save();
+    }
+  }
+
+  // Delete queued timestamp after 24 hours assuming the update has failed.
+  $aquifer_names = \Drupal::entityQuery('aquifer_updates')
+    ->condition('queued', REQUEST_TIME - (3600 * 24), '<')
+    ->execute();
+
+  if ($aquifer_names) {
+    foreach ($aquifer_names as $aquifer_name) {
+      $aquifer_name->setQueuedTime(0);
+      $aquifer_name->save();
+    }
+  }
+}
