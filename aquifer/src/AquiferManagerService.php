@@ -2,14 +2,14 @@
 
 namespace Drupal\aquifer;
 
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * An implementation of AquiferManagerServiceInterface.
  */
-class AquiferManagerService implements AquiferRetrievalServiceInterface {
+class AquiferManagerService implements AquiferManagerServiceInterface {
 
   /**
    * Entity storage for node entities.
@@ -24,30 +24,23 @@ class AquiferManagerService implements AquiferRetrievalServiceInterface {
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   Entity storage for node entities.
    */
-  public function __construct(EntityStorageInterface $node_storage) {
-    $this->nodeStorage = $node_storage;
+  public function __construct(EntityManagerInterface $entity_manager) {
+    $this->nodeStorage = $entity_manager->getStorage('node');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager')->getStorage('node')
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  private function createAquifer(array $aquifer_data) {
+  public function createAquifer(array $aquifer_data) {
     $values = array(
       'title' => $aquifer_data['name'],
+      'type' => 'aquifer',
       'field_aquifer_coordinates' => $aquifer_data['coordinates'],
       'field_aquifer_status' => $aquifer_data['status'],
       'field_aquifer_volume' => $aquifer_data['volume']
     );
-    $this->nodeStorage->create($values);
+    $node = Node::create($values);
+    $node->save();
   }
 
   /**
@@ -56,10 +49,10 @@ class AquiferManagerService implements AquiferRetrievalServiceInterface {
   public function readAquifer($aquifer_name) {
     $node = $this->getAquifer($aquifer_name);
     $aquifer_data = array(
-      'name' => $node->title,
-      'coordinates' => $node->field_aquifer_coordinates->value(),
-      'status' => $node->field_aquifer_status->value(),
-      'volume' => $node->field_aquifer_volume->value()
+      'name' => $node->title->value,
+      'coordinates' => $node->field_aquifer_coordinates->value,
+      'status' => $node->field_aquifer_status->value,
+      'volume' => $node->field_aquifer_volume->value
     );
     return $aquifer_data;
   }
@@ -83,10 +76,9 @@ class AquiferManagerService implements AquiferRetrievalServiceInterface {
       // Retrieve the aquifer
       $node = $this->getAquifer($aquifer_data['name']);
 
-      array_push($aquifer_data); // remove the name attribute
-      // @todo: I'm not sure the entity storage (NodeInterface?) api lets me do this
+      array_shift($aquifer_data); // remove the name attribute
       foreach ($aquifer_data as $property => $value) {
-        $node->field_aquifer_{$property} = $value;
+        $node->set("field_aquifer_{$property}", $value);
       }
       $node->save();
     }

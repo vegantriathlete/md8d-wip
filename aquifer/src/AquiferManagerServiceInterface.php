@@ -19,7 +19,8 @@ interface AquiferManagerServiceInterface {
    * It is not intended that it be possible to directly request to create an
    * aquifer. Instead, it is intended that the updateAquifer method should
    * always be called. If that method determines that the record does not exist
-   * it will call this method.
+   * it will call this method. I'm going to have to remove this method from the
+   * interface and put it in an abstract class that implements this interface.
    *
    * @param array $aquifer_data
    *   An associative array to define the aquifer record:
@@ -30,7 +31,7 @@ interface AquiferManagerServiceInterface {
    *
    * @return string
    */
-  private function createAquifer(array $aquifer_data);
+  public function createAquifer(array $aquifer_data);
 
   /**
    * Read (view) an aquifer

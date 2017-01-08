@@ -4,3 +4,6 @@ services:
   aquifer.aquifer_retrieval_service:
     class: Drupal\aquifer\AquiferRetrievalService
     arguments: ['%rest_endpoint%']
+  aquifer.aquifer_manager_service:
+    class: Drupal\aquifer\AquiferManagerService
+    arguments: ['@entity.manager']
