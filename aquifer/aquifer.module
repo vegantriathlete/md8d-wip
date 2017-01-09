@@ -43,26 +43,58 @@ function aquifer_cron() {
    *       job. Instead, I want to illustrate how to use the queue and cron
    *       queue workers.
    */
-  $queue = \Drupal::queue('aquifer_updates');
 
-  $aquifer_names = \Drupal::entityManager()->get('aquifer.aquifer_retrieval_service')->getAquiferNames();
-  foreach ($aquifer_names as $aquifer_name) {
-    if ($queue->createItem($aquifer_name)) {
-      // Add timestamp to avoid queueing item more than once.
-      $aquifer_name->setQueuedTime(REQUEST_TIME);
-      $aquifer_name->save();
-    }
+  // Ensure that our cron job runs only once each day
+  $last_run = \Drupal::state()->get('aquifer_update.last_run', 0);
+  if ((REQUEST_TIME - $last_run) < 24 * 60 * 60) {
+    return;
   }
 
-  // Delete queued timestamp after 24 hours assuming the update has failed.
-  $aquifer_names = \Drupal::entityQuery('aquifer_updates')
-    ->condition('queued', REQUEST_TIME - (3600 * 24), '<')
-    ->execute();
+  $queue = \Drupal::queue('aquifer_updates');
 
-  if ($aquifer_names) {
-    foreach ($aquifer_names as $aquifer_name) {
-      $aquifer_name->setQueuedTime(0);
-      $aquifer_name->save();
+  // We must access the the service via the static method that the global
+  // Drupal object provides, since we are forced to write procedural code
+  // inside of a hook.
+  $aquifer_retrieval_service = \Drupal::service('aquifer.aquifer_retrieval_service');
+
+  // We are just retrieving all the aquifer names. In reality, the service
+  // would likely have some timestamp to let us know when aquifers have been
+  // updated; we would request aquifers updated since a certain time, as well as
+  // use some other filters to narrow down our results.
+  $aquifer_names = $aquifer_retrieval_service->getAquiferNames();
+
+  // Delete any queued updates for which we have a new update.
+  // Note: In our situation we are always updating all of the aquifers. But,
+  //       in a real situation we'd only be updating some of them. So, we might
+  //       want to leave the rest in the queue.
+  aquifer_delete_queued_updates($queue, $aquifer_names);
+
+  foreach ($aquifer_names as $aquifer_name) {
+    $aquifer_data = $aquifer_retrieval_service->getAquiferData($aquifer_name);
+    $aquifer_data = array_merge(array('name' => $aquifer_name), $aquifer_data);
+    $queue->createItem($aquifer_data);
+  }
+
+  \Drupal::state()->set('aquifer_udpate.last_run', REQUEST_TIME);
+}
+
+/**
+ * Delete items in the queue
+ *
+ * @param Drupal\Core\Queue\QueueInterface $queue
+ *   The queue being used
+ * @param array $delete_list
+ *   The list of aquifer names to delete
+ */
+function aquifer_delete_queued_updates($queue, $delete_list) {
+
+  // Retrieve any updates that are still waiting in the queue.
+  while ($item = $queue->claimItem()) {
+    if (in_array($item->data->name, $delete_list)) {
+      $queue->deleteItem($item);
+    }
+    else {
+      $queue->releaseItem($item);
     }
   }
 }

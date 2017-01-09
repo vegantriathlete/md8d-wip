@@ -35,6 +35,7 @@ class AquiferManagerService implements AquiferManagerServiceInterface {
     $values = array(
       'title' => $aquifer_data['name'],
       'type' => 'aquifer',
+      'uid' => 1,
       'field_aquifer_coordinates' => $aquifer_data['coordinates'],
       'field_aquifer_status' => $aquifer_data['status'],
       'field_aquifer_volume' => $aquifer_data['volume']

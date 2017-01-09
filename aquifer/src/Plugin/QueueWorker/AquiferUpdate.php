@@ -2,8 +2,10 @@
 
 namespace Drupal\aquifer\Plugin\QueueWorker;
 
-use Drupal\aquifer\AquiferManagerServiceInterface
+use Drupal\aquifer\AquiferManagerServiceInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Updates the aquifer content types.
@@ -14,7 +16,7 @@ use Drupal\Core\Queue\QueueWorkerBase;
  *   cron = {"time" = 60}
  * )
  */
-class AquiferUpdate extends QueueWorkerBase {
+class AquiferUpdate extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
   /**
    * The Aquifer Manager Service
@@ -22,19 +24,27 @@ class AquiferUpdate extends QueueWorkerBase {
    */
   protected $aquiferManagerService;
 
-  // @todo: I've got to see if QueueWorkerBase gives me access to the service
-  //        containter so that I can write a __construct method that will
-  //        receive the AquiferManagerService
   /**
    * Constructs the Queue Worker
    */
-  public function __construct() {
+  public function __construct(AquiferManagerServiceInterface $aquifer_manager_service) {
+    $this->aquiferManagerService = $aquifer_manager_service;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $container->get('aquifer.aquifer_manager_service')
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function processItem($data) {
+    $this->aquiferManagerService->updateAquifer($data);
   }
 
 }

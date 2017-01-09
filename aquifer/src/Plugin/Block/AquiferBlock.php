@@ -2,16 +2,13 @@
 
 namespace Drupal\aquifer\Plugin\Block;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides an 'Aggregator feed' block with the latest items from the feed.
+ * Provides an Aquifer block with the names of the aquifers.
  *
  * @Block(
  *   id = "aquifer_block",
@@ -54,7 +51,7 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.manager')->getStorage('node'),
+      $container->get('entity_type.manager')->getStorage('node')
     );
   }
 
@@ -67,14 +64,6 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
     return array(
       'block_count' => 5,
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function blockAccess(AccountInterface $account) {
-    // Only grant access to users with the 'access content' permission.
-    return AccessResult::allowedIfHasPermission($account, 'access content');
   }
 
   /**
@@ -102,10 +91,13 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
    * {@inheritdoc}
    */
   public function build() {
+    // We are just retrieving all of the aquifers. In a real situation we might
+    // do something like choosing the aquifers that were at a critical level
+    // or filter and sort them by some other criteria.
     $result = $this->nodeStorage->getQuery()
       ->condition('type', 'aquifer')
       ->range(0, $this->configuration['block_count'])
-      ->sort('timestamp', 'DESC')
+      ->sort('title', 'ASC')
       ->execute();
 
     if ($result) {
@@ -118,27 +110,18 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
       ];
       foreach ($items as $item) {
         $build['list']['#items'][$item->id()] = [
-          '#type' => 'link',
-          '#url' => $item->urlInfo(),
-          '#title' => $item->label(),
+          '#type' => 'markup',
+          '#markup' => $item->label(),
         ];
       }
-      $build['more_link'] = [
-        '#type' => 'more_link',
-        '#url' => $feed->urlInfo(),
-        '#attributes' => ['title' => $this->t("View this feed's recent news.")],
-      ];
       return $build;
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheTags() {
-    $cache_tags = parent::getCacheTags();
-    $feed = $this->nodeStorage->load($this->configuration['feed']);
-    return Cache::mergeTags($cache_tags, $feed->getCacheTags());
-  }
+  // We have not done anything with cache tags; the results of this block get
+  // cached. If you add or delete aquifer pieces of content, you won't see
+  // those changes reflected in this block unless you get the cache to clear.
+  // One way to do this (which is faster than clearing the cache for the entire
+  // site) is to go into the block layout and configure and save this block.
 
 }
