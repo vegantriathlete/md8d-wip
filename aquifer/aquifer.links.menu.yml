@@ -1,0 +1,22 @@
+# We are not placing these items in any specific menu. Therefore, they will
+# show up in the default menu: Tools.
+aquifer.display_endpoint:
+  title: Display Endpoint
+  description: 'Display the REST Endpoint for the retrieval service'
+  route_name: aquifer.display_endpoint
+aquifer.display_total_aquifers:
+  title: Display Number of Aquifers
+  description: 'Display the number of aquifers tracked'
+  route_name: aquifer.display_total_aquifers
+aquifer.display_aquifers_in_region:
+  title: Display Aquifers in a Region
+  description: 'Display the aquifers in a Region'
+  route_name: aquifer.display_aquifers_in_region
+aquifer.display_aquifer_names:
+  title: Display Aquifers Names
+  description: 'Display the names of all the tracked aquifers'
+  route_name: aquifer.display_aquifer_names
+aquifer.display_aquifer_data:
+  title: Display Aquifer Data
+  description: 'Display the data for a specific aquifer'
+  route_name: aquifer.display_aquifer_data

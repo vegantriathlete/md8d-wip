@@ -6,7 +6,7 @@ aquifer.display_endpoint:
   requirements:
     _permission: 'access content'
 aquifer.display_total_aquifers:
-  path: '/aquifer/display_count'
+  path: '/aquifer/display_total_aquifer_count'
   defaults:
     _controller: '\Drupal\aquifer\Controller\DisplayAquifers::getTotalAquifers'
     _title: 'Number of aquifers tracked world-wide'
@@ -15,6 +15,7 @@ aquifer.display_total_aquifers:
 aquifer.display_aquifers_in_region:
   path: '/aquifer/display_count/{region}'
   defaults:
+    region: 'NorthAmerica'
     _controller: '\Drupal\aquifer\Controller\DisplayAquifers::getTotalAquifers'
     _title_callback: '\Drupal\aquifer\Controller\DisplayAquifers::totalAquifersTitleCallback'
   requirements:
@@ -29,6 +30,7 @@ aquifer.display_aquifer_names:
 aquifer.display_aquifer_data:
   path: '/aquifer/display_aquifer/{aquifer_name}'
   defaults:
+    aquifer_name: 'bigBlue'
     _controller: '\Drupal\aquifer\Controller\DisplayAquifers::getAquiferData'
     _title_callback: '\Drupal\aquifer\Controller\DisplayAquifers::aquiferDataTitleCallback'
   requirements:
