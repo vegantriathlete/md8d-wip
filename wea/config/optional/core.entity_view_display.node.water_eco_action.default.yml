@@ -1,0 +1,53 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.water_eco_action.field_wea_contact_email
+    - field.field.node.water_eco_action.field_wea_coordinates
+    - field.field.node.water_eco_action.field_wea_description
+    - field.field.node.water_eco_action.field_wea_status
+    - field.field.node.water_eco_action.field_wea_urgency
+    - node.type.water_eco_action
+  module:
+    - options
+    - user
+id: node.water_eco_action.default
+targetEntityType: node
+bundle: water_eco_action
+mode: default
+content:
+  field_wea_contact_email:
+    weight: 103
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+  field_wea_coordinates:
+    weight: 102
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_wea_description:
+    weight: 101
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+  field_wea_status:
+    weight: 104
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+  field_wea_urgency:
+    weight: 105
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+  links:
+    weight: 100
+hidden:
+  langcode: true

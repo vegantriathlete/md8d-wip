@@ -1,0 +1,6 @@
+settings:
+  allowed_values:
+    0:
+      label: Baja
+    2:
+      label: Alta

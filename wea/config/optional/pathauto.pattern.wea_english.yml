@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - language
+    - node
+id: wea_english
+label: 'WEA English'
+type: 'canonical_entities:node'
+pattern: 'action/[node:title]'
+selection_criteria:
+  b2c76d14-6a2a-4325-a640-50b73d07455e:
+    id: node_type
+    bundles:
+      water_eco_action: water_eco_action
+    negate: false
+    context_mapping:
+      node: node
+    uuid: b2c76d14-6a2a-4325-a640-50b73d07455e
+  a7efbc4c-bf4b-4575-9603-37489fbc0228:
+    id: language
+    langcodes:
+      en: en
+    negate: false
+    context_mapping:
+      language: 'node:langcode:language'
+    uuid: a7efbc4c-bf4b-4575-9603-37489fbc0228
+selection_logic: and
+weight: -10
+relationships:
+  'node:langcode:language':
+    label: Language

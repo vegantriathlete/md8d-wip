@@ -1,0 +1,14 @@
+settings:
+  allowed_values:
+    -
+      label: Pendiente
+    -
+      label: 'En Progreso'
+    -
+      label: Terminado
+    -
+      label: Cancelado
+    -
+      label: Pospuesto
+    -
+      label: 'En Pausa'

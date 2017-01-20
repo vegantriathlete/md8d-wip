@@ -1,0 +1,12 @@
+name: Water Eco Action
+description: The custom content type (water_eco_action) and all of its corresponding functionality
+package: Custom
+type: module
+core: 8.x
+dependencies:
+  - content_translation
+  - menu_ui
+  - node
+  - options
+  - path
+  - user
