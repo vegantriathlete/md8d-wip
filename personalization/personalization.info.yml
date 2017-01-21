@@ -1,0 +1,5 @@
+name: Personalization
+description: Services to personalize the content on the site
+package: Custom
+type: module
+core: 8.x
