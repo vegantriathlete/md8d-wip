@@ -1,0 +1,7 @@
+name: Instant Aqua International Forums
+description: Functionality related to enhancing forums
+package: Custom
+type: module
+core: 8.x
+dependencies:
+  - forum

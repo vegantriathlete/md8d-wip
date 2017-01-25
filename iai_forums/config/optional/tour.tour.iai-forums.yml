@@ -1,0 +1,60 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - forum
+    - iai_forums
+id: iai-forums
+label: 'Forums listing page'
+module: iai_forums
+routes:
+  - route_name: forum.index
+tips:
+  introduction:
+    id: introduction
+    plugin: text
+    label: 'Welcome to the forums!'
+    body: 'Our forums are meant to give you a way to interact with each other and exchange information.'
+    weight: 1
+  adding-a-forum-topic:
+    id: adding-a-forum-topic
+    plugin: text
+    label: 'Adding a forum topic'
+    body: 'When you want to start a new discussion, just click the "Add new forum topic" button.'
+    weight: 2
+    location: bottom
+    attributes:
+      data-class: action-links
+  selecting-a-forum:
+    id: selecting-a-forum
+    plugin: text
+    label: 'Selecting a forum'
+    body: 'You will need to select a forum in which to place your topic. If you are already inside a forum when you click the "Add new forum topic" then the forum will be pre-selected for you.'
+    weight: 3
+    location: bottom
+    attributes:
+      data-class: forum-list__forum
+  understanding-forum-containers:
+    id: understanding-forum-containers
+    plugin: text
+    label: 'Understanding forum containers'
+    body: 'Note that our forums are placed inside of containers for the sake of organization.'
+    weight: 4
+    location: bottom
+    attributes:
+      data-class: forum__name
+  commenting-on-forum-topics:
+    id: commenting-on-forum-topics
+    plugin: text
+    label: 'Commenting on forum topics'
+    body: 'You also have the ability to participate in a discussion on a particular topic by commenting on the topic.'
+    weight: 5
+    location: bottom
+    attributes:
+      data-class: forum__topics
+  goodbye:
+    id: goodbye
+    plugin: text
+    label: 'Good bye!'
+    body: 'Thanks for taking the tour of our forums. We hope you enjoy them!'
+    weight: 6
