@@ -1,0 +1,5 @@
+name: Product Image gallery
+description: Provides functionality to display product image galleries based on images attached to a product
+package: Custom
+type: module
+core: 8.x
