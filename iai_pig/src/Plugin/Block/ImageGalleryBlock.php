@@ -5,17 +5,22 @@ namespace Drupal\iai_pig\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides an Eco action block with actions that are nearby.
+ * Provides an image gallery block.
  *
  * @Block(
  *   id = "iai_product_image_gallery",
  *   admin_label = @Translation("Product Image Gallery"),
  *   category = @Translation("Image Display")
  * )
+ *
+ * Note: This block is not intended to be an "all powerful" block to be reused
+ *       elsewhere. We are making certain assumptions to keep the example
+ *       relatively simple.
  */
 class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
@@ -25,6 +30,13 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $nodeStorage;
+
+  /**
+   * The route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
 
   // @todo: I think I'll be adding a service for some of the image processing
 
@@ -42,10 +54,11 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
    * @param \Drupal\personalization\PersonalizationIpServiceInterface $personalization_ip_service
    *   The personalization Ip Service.
    */
-  //public function __construct(array $configuration, $plugin_id, $plugin_definition, $node_storage, PersonalizationIpServiceInterface $personalization_ip_service) {
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $node_storage) {
+  //public function __construct(array $configuration, $plugin_id, $plugin_definition, $node_storage, RouteMatchInterface $route_match, PersonalizationIpServiceInterface $personalization_ip_service) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $node_storage, RouteMatchInterface $route_match) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->nodeStorage = $node_storage;
+    $this->routeMatch = $route_match;
     //$this->personalizationIpService = $personalization_ip_service;
   }
 
@@ -59,6 +72,7 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager')->getStorage('node'),
+      $container->get('current_route_match'),
       // $container->get('personalization.personalization_ip_service')
     );
   }
@@ -149,8 +163,41 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
   }
 
   private function getProduct() {
-    $nid = $this->getProductNid();
-    if ($nid) {
+    // Load the current node.
+    // Note: For this example block we are concerned only with nodes.
+    //       Specifically, we are operating under the assumption that this block
+    //       should render only when it's being viewed on a Book page that
+    //       references a Product or when it's being viewed directly on a
+    //       Product page.
+    $node = $this->routeMatch->getParameter('node');
+
+    if ($node) {
+      // Check if this is a Product node already
+      if ($node->type == 'product') {
+        return $node;
+      }
+
+      // Check if this node references a Product
+      $product = $this->getReferencedProduct($node);
+
+      return $product;
+    }
+    else {
+      return NULL;
+    }
+  }
+
+  private function getReferencedProduct($node) {
+    // Note: We are making an assumption about a particular field name that
+    //       Book pages use for the entity reference to products. We did not
+    //       define the Product content type with a custom module (which would
+    //       allow us to have the module as a dependency, and thus ensure that
+    //       the field name exists) because the Product was defined in the
+    //       section of the course in which we were using only Core
+    //       functionality. We had not yet started writing any custom code.
+    if (FALSE) {
+    //if (isset()) {
+      $nid = '';
       $result = $this->nodeStorage->getQuery()
         ->condition('type', 'product')
         ->condition('nid', $nid)
@@ -161,11 +208,6 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
     else {
       return NULL;
     }
-  }
-
-  private function getProductNid() {
-    $nid = NULL;
-    return $nid;
   }
 
   private function getImageData($product) {
