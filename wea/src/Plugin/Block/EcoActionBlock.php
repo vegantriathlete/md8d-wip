@@ -3,6 +3,7 @@
 namespace Drupal\wea\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -49,7 +50,7 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
    * @param \Drupal\personalization\PersonalizationIpServiceInterface $personalization_ip_service
    *   The personalization Ip Service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $node_storage, PersonalizationIpServiceInterface $personalization_ip_service) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $node_storage, PersonalizationIpServiceInterface $personalization_ip_service) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->nodeStorage = $node_storage;
     $this->personalizationIpService = $personalization_ip_service;
