@@ -44,7 +44,7 @@ class DisplayProductImage extends ControllerBase {
 
     $render_array['still_testing'] = array(
       '#type' => 'markup',
-      '#markup' => t('You are successfully viewing the output for the DisplayProductImage Controller.'),
+      '#markup' => t('You are successfully viewing the output for the DisplayProductImage Controller for node: @title.', array('@title' => $node->title->value)),
     );
     return $render_array;
   }

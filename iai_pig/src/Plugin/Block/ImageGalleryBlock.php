@@ -39,6 +39,8 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
   protected $routeMatch;
 
   // @todo: I think I'll be adding a service for some of the image processing
+  //        I'll need to figure out how to get the service to retrieve the
+  //        "translated" images.
 
   /**
    * Constructs a product image gallery block object.
