@@ -2,6 +2,6 @@ iai_pig.display_product_image:
   path: '/iai_pig/display_product_image/{node}/{delta}'
   defaults:
     _controller: '\Drupal\iai_pig\Controller\DisplayProductImage::displayProductImage'
-    _title: 'Product Image Display'
+    _title_callback: '\Drupal\iai_pig\Controller\DisplayProductImage::pageTitleCallback'
   requirements:
     _permission: 'access content'
