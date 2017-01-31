@@ -3,6 +3,7 @@
 namespace Drupal\aquifer\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -37,7 +38,7 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   Entity storage for node entities.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $node_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $node_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->nodeStorage = $node_storage;
   }
