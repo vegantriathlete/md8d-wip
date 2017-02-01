@@ -97,7 +97,6 @@ class ImageGalleryBlock extends BlockBase {
       // This logic is just to give some positive feedback that the block is
       // being rendered. In reality, we'd likely just not have the block render
       // anything in this situation.
-      $build['no_data'] = [
       $build['list']['#items'][0] = [
         '#type' => 'markup',
         '#markup' => $this->t('There were no product images to display.')
