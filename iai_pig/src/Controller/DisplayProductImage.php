@@ -77,6 +77,9 @@ class DisplayProductImage extends ControllerBase {
    *   The render array
    */
   public function pageTitleCallback(Node $node, $delta) {
+    // Note: The Modal API did not handle this render array, which results in
+    //       "Array" showing in the Modal title bar. I have changed the routing
+    //        YAML file to use a static title.
     return [
       '#markup' => $this->t('Image @delta for @title', array('@delta' => $delta, '@title' => $node->title->value))
     ];

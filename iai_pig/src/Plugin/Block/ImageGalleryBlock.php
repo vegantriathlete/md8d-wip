@@ -2,8 +2,11 @@
 
 namespace Drupal\iai_pig\Plugin\Block;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 
@@ -99,10 +102,28 @@ class ImageGalleryBlock extends BlockBase {
 
       while ($item_count < $block_count && isset($image_data[$item_count])) {
         $file = File::load($image_data[$item_count]['target_id']);
-        $build['list']['#items'][$item_count] = [
+        $link_text = [
           '#theme' => 'image_style',
           '#uri' => $file->getFileUri(),
           '#style_name' => 'thumbnail',
+        ];
+        $url = Url::fromUserInput('/iai_pig/display_product_image/' . $product->nid->value . '/' . $item_count);
+        $options = array(
+          'attributes' => array(
+            'class' => array(
+              'use-ajax',
+            ),
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => Json::encode([
+              'width' => 700,
+            ]),
+          ),
+        );
+        $url->setOptions($options);
+        $build['list']['#items'][$item_count] = [
+          '#type' => 'markup',
+          '#markup' => Link::fromTextAndUrl(drupal_render($link_text), $url)
+                       ->toString(),
         ];
         $item_count++;
       }
