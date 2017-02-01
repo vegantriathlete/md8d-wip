@@ -4,10 +4,8 @@ namespace Drupal\iai_pig\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides an image gallery block.
@@ -15,70 +13,31 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Block(
  *   id = "iai_product_image_gallery",
  *   admin_label = @Translation("Product Image Gallery"),
- *   category = @Translation("Image Display")
+ *   category = @Translation("Image Display"),
+ *   context = {
+ *     "node" = @ContextDefinition(
+ *       "entity:node",
+ *       label = @Translation("Current Node")
+ *     )
+ *   }
  * )
+ *
+ * We are controlling the block caching by setting the context key above.
+ * Whenever a node is saved it invalidates its cache context and the block
+ * will be rebuilt. We make use of this context in our build method with the
+ * code: <code>$node = $this->getContextValue('node');</code>
+ *
+ * Also, the context ensures that the block is present only on node pages.
+ *
+ * @see: http://drupal.stackexchange.com/questions/199527/how-do-i-correctly-setup-caching-for-my-custom-block-showing-content-depending-o
+ * @see: http://drupal.stackexchange.com/questions/180907/how-do-i-make-a-block-that-pulls-the-current-node-content
+ * @see: https://api.drupal.org/api/drupal/core!lib!Drupal!Component!Plugin!ContextAwarePluginBase.php/function/ContextAwarePluginBase%3A%3AgetContextValue/8.2.x
  *
  * Note: This block is not intended to be an "all powerful" block to be reused
  *       elsewhere. We are making certain assumptions to keep the example
  *       relatively simple.
  */
-class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInterface {
-
-  /**
-   * The entity storage for products.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $nodeStorage;
-
-  /**
-   * The route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  // @todo: I think I'll be adding a service for some of the image processing
-  //        I'll need to figure out how to get the service to retrieve the
-  //        "translated" images.
-
-  /**
-   * Constructs a product image gallery block object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
-   *   Entity storage for node entities.
-   * @param \Drupal\personalization\PersonalizationIpServiceInterface $personalization_ip_service
-   *   The personalization Ip Service.
-   */
-  //public function __construct(array $configuration, $plugin_id, $plugin_definition, $node_storage, RouteMatchInterface $route_match, PersonalizationIpServiceInterface $personalization_ip_service) {
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $node_storage, RouteMatchInterface $route_match) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->nodeStorage = $node_storage;
-    $this->routeMatch = $route_match;
-    //$this->personalizationIpService = $personalization_ip_service;
-  }
-
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager')->getStorage('node'),
-      $container->get('current_route_match'),
-      // $container->get('personalization.personalization_ip_service')
-    );
-  }
-
+class ImageGalleryBlock extends BlockBase {
 
   /**
    * {@inheritdoc}
@@ -116,14 +75,15 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
    */
   public function build() {
     $build = array();
+    $node = $this->getContextValue('node');
 
     // Determine if we are on a page that points to a product.
-    $product = $this->getProduct();
+    $product = $this->getProduct($node);
 
     if ($product) {
+
       // Retrieve the product images
       $image_data = $this->getImageData($product);
-
       $block_count = $this->configuration['block_count'];
       $item_count = 0;
       $build['list'] = [
@@ -138,9 +98,11 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
       ];
 
       while ($item_count < $block_count && isset($image_data[$item_count])) {
+        $file = File::load($image_data[$item_count]['target_id']);
         $build['list']['#items'][$item_count] = [
-          '#type' => 'markup',
-          '#markup' => $image_data[$item_count]['link'],
+          '#theme' => 'image_style',
+          '#uri' => $file->getFileUri(),
+          '#style_name' => 'thumbnail',
         ];
         $item_count++;
       }
@@ -153,29 +115,19 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
       ];
     }
 
-    // Do I need to set the cache tags so that the block gets rebuilt for each
-    // path? Can I have it cached per path? That would be good.
-
-    // We have not done anything with cache tags; the results of this block get
-    // cached. If you add or delete product images, you won't see
-    // those changes reflected in this block unless you get the cache to clear.
-    // One way to do this (which is faster than clearing the cache for the entire
-    // site) is to go into the block layout and configure and save this block.
     return $build;
   }
 
-  private function getProduct() {
-    // Load the current node.
+  private function getProduct(Node $node) {
     // Note: For this example block we are concerned only with nodes.
     //       Specifically, we are operating under the assumption that this block
     //       should render only when it's being viewed on a Book page that
     //       references a Product or when it's being viewed directly on a
     //       Product page.
-    $node = $this->routeMatch->getParameter('node');
 
     if ($node) {
       // Check if this is a Product node already
-      if ($node->type == 'product') {
+      if ($node->getType() == 'product') {
         return $node;
       }
 
@@ -197,15 +149,10 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
     //       the field name exists) because the Product was defined in the
     //       section of the course in which we were using only Core
     //       functionality. We had not yet started writing any custom code.
-    if (FALSE) {
-    //if (isset()) {
-      $nid = '';
-      $result = $this->nodeStorage->getQuery()
-        ->condition('type', 'product')
-        ->condition('nid', $nid)
-        ->range(0, 1)
-        ->execute();
-      return Node::load(reset($result));
+    if (isset($node->field_product)) {
+      $referenced_entities = $node->field_product->referencedEntities();
+      $node = $referenced_entities[0];
+      return $node;
     }
     else {
       return NULL;
@@ -214,6 +161,9 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
 
   private function getImageData($product) {
     $image_data = array();
+    foreach ($product->field_image as $image) {
+      $image_data[] = $image->getValue();
+    }
     return $image_data;
   }
 }
