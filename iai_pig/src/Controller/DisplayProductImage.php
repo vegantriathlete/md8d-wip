@@ -46,6 +46,8 @@ class DisplayProductImage extends ControllerBase {
 
     // @todo: Make sure to use a particular image preset.
     //        I wonder if I should have the iai_pig module define a preset
+    //        For the moment I am using the "large" image preset, which is
+    //        defined by the Standard installation profile.
 
     if (isset($node->field_image[$delta])) {
       $image_data = $node->field_image[$delta]->getValue();

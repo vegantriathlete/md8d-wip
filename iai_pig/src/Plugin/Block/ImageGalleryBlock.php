@@ -94,12 +94,17 @@ class ImageGalleryBlock extends BlockBase {
         '#items' => [],
       ];
 
-      // Temporary logic while I'm still building the functionality
+      // This logic is just to give some positive feedback that the block is
+      // being rendered. In reality, we'd likely just not have the block render
+      // anything in this situation.
+      $build['no_data'] = [
       $build['list']['#items'][0] = [
         '#type' => 'markup',
-        '#markup' => t('There were no product images to display.')
+        '#markup' => $this->t('There were no product images to display.')
       ];
 
+      // Note: We are using the "thumbnail" image preset, which is defined by
+      //       the Standard installation profile.
       while ($item_count < $block_count && isset($image_data[$item_count])) {
         $file = File::load($image_data[$item_count]['target_id']);
         $link_text = [
@@ -129,10 +134,12 @@ class ImageGalleryBlock extends BlockBase {
       }
     }
     else {
-      // Temporary logic while I'm still building the functionality
+      // This logic is just to give some positive feedback that the block is
+      // being rendered. In reality, we'd likely just not have the block render
+      // anything in this situation.
       $build['no_data'] = [
         '#type' => 'markup',
-        '#markup' => t('This page does not reference a product.'),
+        '#markup' => $this->t('This page does not reference a product.'),
       ];
     }
 
