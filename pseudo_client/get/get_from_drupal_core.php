@@ -2,17 +2,30 @@
 
 // Execute a cURL call
 
-// Just testing stuff with https://jsonplaceholder.typicode.com/
-// @see: https://github.com/typicode/jsonplaceholder#creating-a-resource
-$rest_uri = 'http://jsonplaceholder.typicode.com/posts/1';
+$rest_uri = 'http://testmd8ddev/node/22?_format=json';
 $curlExecutor = new curlExecutor($rest_uri);
-$result = $curlExecutor->getFields();
-$decoded_result = json_decode($result);
-echo "User ID: " . $decoded_result->userId . "<br>";
-echo "Post ID: " . $decoded_result->id . "<br>";
-echo "Post title: " . $decoded_result->title . "<br>";
-echo "Post body: " . $decoded_result->body . "<br>";
-
+$results = $curlExecutor->getRecords();
+$decoded_results = json_decode($results);
+?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>"GET"ing data from Drupal core</title>
+  </head>
+  <body>
+    <h1>This is the data received.</h1>
+<?php
+  echo "<ul>";
+  echo "<li>Title: " . $decoded_results->title[0]->value . "</li>";
+  echo "<li>Coordinates: " . $decoded_results->field_wea_coordinates[0]->value . "</li>";
+  echo "<li>Description: " . $decoded_results->field_wea_description[0]->value . "</li>";
+  echo "</ul>";
+  echo "<p><pre>" . print_r($decoded_results, 1) . "</pre></p>";
+?>
+  </body>
+</html>
+<?php
 // Yippee! We successfully completed the script :)
 exit(0);
 
@@ -26,15 +39,11 @@ class curlExecutor {
     $this->restURI = $rest_uri;
   }
 
-  public function getFields() {
+  public function getRecords() {
     // Setup the cURL request.
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $this->restURI);
-    curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_NOPROGRESS, 1);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
     $result = curl_exec($ch);
     // Report any errors
     if ($error = curl_error($ch)) {
