@@ -21,7 +21,6 @@ $decoded_results = json_decode($results);
   echo "<li>Coordenadas: " . $decoded_results->coordinates . "</li>";
   echo "<li>Descripcion: " . $decoded_results->description . "</li>";
   echo "</ul>";
-  echo "<p><pre>" . print_r($decoded_results, 1) . "</pre></p>";
 ?>
   </body>
 </html>
