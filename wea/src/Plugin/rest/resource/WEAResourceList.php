@@ -2,10 +2,13 @@
 
 namespace Drupal\wea\Plugin\rest\resource;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides a resource to list water eco action items.
@@ -22,8 +25,17 @@ class WEAResourceList extends ResourceBase {
 
   /**
    * The currently selected language.
+   *
+   * @var \Drupal\Core\Language\Language
    */
   protected $currentLanguage;
+
+  /**
+   * The entity storage for aquifers.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $nodeStorage;
 
   /**
    * Constructs a Drupal\wea\Plugin\rest\resource\WEAResourceList object.
@@ -45,8 +57,8 @@ class WEAResourceList extends ResourceBase {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, $serializer_formats, LoggerInterface $logger, LanguageManagerInterface $language_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
-    $this->languageManager = $language_manager;
-    $this->language = $this->language_manager->getCurrentLanguage();
+    $this->currentLanguage = $language_manager->getCurrentLanguage();
+    $this->nodeStorage = $entity_type_manager->getStorage('node');
   }
 
   /**
@@ -70,24 +82,37 @@ class WEAResourceList extends ResourceBase {
    * Returns a list of water eco action items.
    *
    * @return \Drupal\rest\ResourceResponse
-   *   The response containing the log entry.
+   *   The response containing the list of items.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function get() {
-      //$record = db_query("SELECT * FROM {watchdog} WHERE wid = :wid", array(':wid' => $id))
-      //  ->fetchAssoc();
-$record = [
-  'item_1' => array(
-    'id' => 1,
-    'title' => 'first wea item'
-  ),
-  'item_2' => array(
-    'id' => 2,
-    'title' => 'second wea item'
-  )
-];
-      if (!empty($record)) {
-        return new ResourceResponse($record);
+    // We are just retrieving all of the water eco action items. In a real
+    // situation we might do something like inspecting query arguments to filter
+    // and sort them by some other criteria.
+    $result = $this->nodeStorage->getQuery()
+      ->condition('type', 'water_eco_action')
+      ->condition('langcode', $this->currentLanguage->getId())
+      ->condition('status', 1)
+      ->sort('title', 'ASC')
+      ->execute();
+
+    if ($result) {
+      $items = $this->nodeStorage->loadMultiple($result);
+      foreach ($items as $item) {
+        $translated_item = $item->getTranslation($this->currentLanguage->getId());
+        $record[] = [
+          'id' => $item->nid->value,
+          'title' => $translated_item->getTitle()
+        ];
       }
+    }
+    if (!empty($record)) {
+      $response = new ResourceResponse($record);
+      $response->addCacheableDependency($record);
+      return $response;
+    }
+    throw new NotFoundHttpException(t('No water eco action items were found.'));
 
   }
 
