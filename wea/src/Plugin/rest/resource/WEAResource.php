@@ -27,6 +27,8 @@ class WEAResource extends ResourceBase {
 
   /**
    * The currently selected language.
+   *
+   * @var \Drupal\Core\Language\Language
    */
   protected $currentLanguage;
 
@@ -88,7 +90,7 @@ class WEAResource extends ResourceBase {
       if (!$node_access->isAllowed()) {
         throw new AccessDeniedHttpException();
       }
-      if ($node->getType() == 'water_eco_action') {
+      if ($node->getType() == 'water_eco_action' && $translated_node->status->value == 1) {
         $record = [
           'title' => $translated_node->getTitle(),
           'description' => $translated_node->field_wea_description->value,
