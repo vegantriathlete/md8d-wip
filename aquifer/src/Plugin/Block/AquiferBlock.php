@@ -97,6 +97,7 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
     // or filter and sort them by some other criteria.
     $result = $this->nodeStorage->getQuery()
       ->condition('type', 'aquifer')
+      ->condition('status', 1)
       ->range(0, $this->configuration['block_count'])
       ->sort('title', 'ASC')
       ->execute();
