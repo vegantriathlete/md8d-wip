@@ -13,6 +13,7 @@ use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -167,6 +168,73 @@ class WEAResource extends ResourceBase {
     catch (EntityStorageException $e) {
       throw new HttpException(500, 'Internal Server Error', $e);
     }
+  }
+
+  /**
+   * Responds to PATCH requests and updates a water eco action item.
+   *
+   * @param string $id
+   *   The ID of the object.
+   * @param array $data
+   *   The PATCH data.
+   *
+   * @return \Drupal\rest\ModifiedResourceResponse
+   *   The HTTP response object.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+   */
+  public function patch($id, $data = NULL) {
+    if ($data == NULL) {
+      throw new BadRequestHttpException('No data received.');
+    }
+    if ($node = Node::load($id)) {
+      if ($node->getType() != 'water_eco_action') {
+        throw new BadRequestHttpException('You have not requested a Water Eco Action item.');
+      }
+      if (!$node->access('update')) {
+        throw new AccessDeniedHttpException();
+      }
+      if (isset($data['language_code'])) {
+        if ($node->hasTranslation($data['language_code'])) {
+          $translated_node = $node->getTranslation($data['language_code']);
+        }
+        else {
+          throw new BadRequestHttpException('This translation does not yet exist.');
+        }
+      }
+      else {
+        $translated_node = $node;
+      }
+
+      if (isset($data['title'])) {
+        $translated_node->set('title', $data['title']);
+      }
+      $wea_fields = array(
+        'contact_email',
+        'coordinates',
+        'description',
+        'status',
+        'urgency'
+      );
+      foreach ($wea_fields as $field) {
+        if (isset($data[$field])) {
+          // Note: We'd want to do some type of data validation
+          $translated_node->set('field_wea_' . $field, $data[$field]);
+        }
+      }
+
+      try {
+        $translated_node->save();
+        $this->logger->notice('Updated water eco action item with ID %id.', array('%id' => $id));
+
+        // Return the updated node in the response body.
+        return new ModifiedResourceResponse($translated_node, 200);
+      }
+      catch (EntityStorageException $e) {
+        throw new HttpException(500, 'Internal Server Error', $e);
+      }
+    }
+    throw new NotFoundHttpException(t('Water eco action item with ID @id was not found', array('@id' => $id)));
   }
 
 }
