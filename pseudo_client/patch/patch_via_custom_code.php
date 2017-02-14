@@ -61,6 +61,7 @@ class tokenRetriever {
  */
 class curlExecutor {
   public $restURI;
+  public $token;
   public $postFields;
   public function __construct(string $rest_uri, string $token, array $post_fields) {
     $this->restURI = $rest_uri;
