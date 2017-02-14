@@ -27,7 +27,7 @@ $decoded_result = json_decode($result);
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>"POST"ing data via Drupal core</title>
+    <title>"PATCH"ing data via Drupal core</title>
   </head>
   <body>
     <h1>Here is some lovely information for you!</h1>
