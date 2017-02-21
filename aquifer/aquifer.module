@@ -45,14 +45,14 @@ function aquifer_cron() {
    */
 
   // Ensure that our cron job runs only once each day
-  $last_run = \Drupal::state()->get('aquifer_update.last_run', 0);
-  if ((REQUEST_TIME - $last_run) < 24 * 60 * 60) {
+  $last_run = \Drupal::state()->get('aquifer_update.last_run') ?: 0;
+  if ((REQUEST_TIME - $last_run) < ( 24 * 60 * 60) ) {
     return;
   }
 
   $queue = \Drupal::queue('aquifer_updates');
 
-  // We must access the the service via the static method that the global
+  // We must access the service via the static method that the global
   // Drupal object provides, since we are forced to write procedural code
   // inside of a hook.
   $aquifer_retrieval_service = \Drupal::service('aquifer.aquifer_retrieval_service');
@@ -75,7 +75,7 @@ function aquifer_cron() {
     $queue->createItem($aquifer_data);
   }
 
-  \Drupal::state()->set('aquifer_udpate.last_run', REQUEST_TIME);
+  \Drupal::state()->set('aquifer_update.last_run', REQUEST_TIME);
 }
 
 /**
