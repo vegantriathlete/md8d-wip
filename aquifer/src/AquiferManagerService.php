@@ -3,13 +3,11 @@
 namespace Drupal\aquifer;
 
 use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\node\Entity\Node;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * An implementation of AquiferManagerServiceInterface.
  */
-class AquiferManagerService implements AquiferManagerServiceInterface {
+class AquiferManagerService extends AbstractAquiferManagerService implements AquiferManagerServiceInterface {
 
   /**
    * Entity storage for node entities.
@@ -21,7 +19,7 @@ class AquiferManagerService implements AquiferManagerServiceInterface {
   /**
    * Constructs the Aquifer Manager Service object.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   Entity storage for node entities.
    */
   public function __construct(EntityManagerInterface $entity_manager) {
@@ -31,17 +29,23 @@ class AquiferManagerService implements AquiferManagerServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function createAquifer(array $aquifer_data) {
+  protected function createAquifer(array $aquifer_data) {
+    $expected_fields = array('name', 'coordinates', 'status', 'volume');
+    $operation = 'creating an aquifer';
+    $this->validateExpectedFields($expected_fields, $operation, $aquifer_data);
+    $this->validatePassedFields($expected_fields, $operation, $aquifer_data);
     $values = array(
       'title' => $aquifer_data['name'],
       'type' => 'aquifer',
       'uid' => 1,
-      'field_aquifer_coordinates' => $aquifer_data['coordinates'],
-      'field_aquifer_status' => $aquifer_data['status'],
-      'field_aquifer_volume' => $aquifer_data['volume']
     );
-    $node = Node::create($values);
-    $node->save();
+    unset($aquifer_data['name']);
+    foreach ($aquifer_data as $property => $value) {
+      $values['field_aquifer_' . $property] = $value;
+    }
+    $node = $this->nodeStorage->create($values);
+    $this->nodeStorage->save($node);
+    return (object) array('status' => 'created', 'object' => $node);
   }
 
   /**
@@ -77,11 +81,14 @@ class AquiferManagerService implements AquiferManagerServiceInterface {
       // Retrieve the aquifer
       $node = $this->getAquifer($aquifer_data['name']);
 
-      array_shift($aquifer_data); // remove the name attribute
+      unset($aquifer_data['name']); // remove the name attribute
+      $expected_fields = array('coordinates', 'status', 'volume');
+      $this->validatePassedFields($expected_fields, 'updating an aquifer', $aquifer_data);
       foreach ($aquifer_data as $property => $value) {
         $node->set("field_aquifer_{$property}", $value);
       }
-      $node->save();
+      $this->nodeStorage->save($node);
+      return (object) array('status' => 'updated', 'object' => $node);
     }
     else {
       // Do something about the fact that there is more than one aquifer with
@@ -106,7 +113,48 @@ class AquiferManagerService implements AquiferManagerServiceInterface {
       ->range(0, 1)
       ->execute();
 
-    return Node::load(reset($result));
+    return $this->nodeStorage->load(reset($result));
   }
 
+  /**
+   * Validate the field data
+   *
+   * @param array $expected_fields
+   *   The fields that are expected to be passed for the operation being
+   *   performed
+   * @param string $operation
+   *   The operation being performed
+   * @param array $aquifer_data
+   *   The data being passed in.
+   *
+   * @throws \InvalidArgumentException
+   */
+  private function validateExpectedFields($expected_fields, $operation, $aquifer_data) {
+    foreach ($expected_fields as $field_name) {
+      if (!isset($aquifer_data[$field_name])) {
+        throw new \InvalidArgumentException('Missing expected field: ' . $field_name . ' when ' . $operation . '.');
+      }
+    }
+  }
+
+  /**
+   * Validate the field data
+   *
+   * @param array $expected_fields
+   *   The fields that are expected to be passed for the operation being
+   *   performed
+   * @param string $operation
+   *   The operation being performed
+   * @param array $aquifer_data
+   *   The data being passed in.
+   *
+   * @throws \UnexpectedValueException
+   */
+  private function validatePassedFields($expected_fields, $operation, $aquifer_data) {
+    foreach ($aquifer_data as $field_name => $value) {
+      if (!in_array($field_name, $expected_fields)) {
+        throw new \UnexpectedValueException('Unexpected field: ' . $field_name . ' when ' . $operation . '.');
+      }
+    }
+  }
 }
