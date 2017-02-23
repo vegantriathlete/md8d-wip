@@ -27,11 +27,11 @@ class AquiferManagerServiceTest extends UnitTestCase {
   }
 
   /**
-   * Provides good data for updating / adding aquifers
+   * Provides good data for adding aquifers
    *
    * @return array
    */
-  public function provideGoodAquiferData () {
+  public function provideGoodCreateAquiferData () {
     return [
       [array(
         'name' => 'Northern Aquifer',
@@ -64,7 +64,7 @@ class AquiferManagerServiceTest extends UnitTestCase {
    * Test updating a non-existing aquifer
    *
    * @covers ::createAquifer
-   * @dataProvider provideGoodAquiferData
+   * @dataProvider provideGoodCreateAquiferData
    */
   public function testCreateGoodAquifer($aquiferData) {
     $query_object = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryInterface')
@@ -129,8 +129,6 @@ class AquiferManagerServiceTest extends UnitTestCase {
       )],
       [array(
         'name' => 'Western Aquifer',
-        'status' => 'critical',
-        'volume' => '4'
       )],
     ];
   }
@@ -266,10 +264,40 @@ class AquiferManagerServiceTest extends UnitTestCase {
   }
 
   /**
+   * Provides good data for updating aquifers
+   *
+   * @return array
+   */
+  public function provideGoodUpdateAquiferData () {
+    return [
+      [array(
+        'name' => 'Northern Aquifer',
+        'coordinates' => 'Way up north',
+      )],
+      [array(
+        'name' => 'Eastern Aquifer',
+        'status' => 'low',
+        'volume' => '2'
+      )],
+      [array(
+        'name' => 'Southern Aquifer',
+        'coordinates' => 'Way to the south',
+        'volume' => '3'
+      )],
+      [array(
+        'name' => 'Western Aquifer',
+        'coordinates' => 'Way to the south',
+        'status' => 'critical',
+        'volume' => '4'
+      )],
+    ];
+  }
+
+  /**
    * Test updating an existing aquifer
    *
    * @covers ::updateAquifer
-   * @dataProvider provideGoodAquiferData
+   * @dataProvider provideGoodUpdateAquiferData
    */
   public function testUpdateGoodAquifer($aquiferData) {
     $query_object = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryInterface')
