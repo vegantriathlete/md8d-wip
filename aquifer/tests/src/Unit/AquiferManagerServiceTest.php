@@ -9,8 +9,6 @@
 namespace Drupal\Tests\aquifer\Unit;
 
 use Drupal\aquifer\AquiferManagerService;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
