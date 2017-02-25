@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * Implements hook_install().
+ *
+ * @see: https://www.drupal.org/node/2599228
+ * I was running into an issue being able to run my Functional tests that
+ * needed to create Aquifer pieces of content.
+ */
+function aquifer_install() {
+  // Ensure the translation fields are created in the database.
+  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+}
