@@ -43,7 +43,6 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
     $this->nodeStorage = $node_storage;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -55,7 +54,6 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
       $container->get('entity_type.manager')->getStorage('node')
     );
   }
-
 
   /**
    * {@inheritdoc}
