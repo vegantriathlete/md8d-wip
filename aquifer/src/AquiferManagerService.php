@@ -75,7 +75,8 @@ class AquiferManagerService extends AbstractAquiferManagerService implements Aqu
     $count_nodes = $query->execute();
 
     if ($count_nodes == 0) {
-      $this->createAquifer($aquifer_data);
+      $response = $this->createAquifer($aquifer_data);
+      return $response;
     }
     elseif ($count_nodes == 1) {
       // Retrieve the aquifer
