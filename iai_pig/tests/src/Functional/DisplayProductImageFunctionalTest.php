@@ -26,7 +26,7 @@ class DisplayProductImageFunctionalTest extends BrowserTestBase {
     // Create a product piece of content
     $node = $this->drupalCreateNode(array(
       'title' => t('Product without an image'),
-      'type' => 'test_product',
+      'type' => 'product',
     ));
     $message = 'You are viewing ' . $node->getTitle() . '. Unfortunately, there is no image defined for delta: 0.';
 
