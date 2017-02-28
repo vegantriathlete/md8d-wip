@@ -1,0 +1,12 @@
+name: Test product for IAI Product Image Gallery
+description: Defines the Product custom content type
+package: Custom
+type: module
+core: 8.x
+dependencies:
+  - file
+  - image
+  - menu_ui
+  - node
+  - path
+  - user
