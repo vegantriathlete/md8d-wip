@@ -5,3 +5,10 @@ iai_pig.display_product_image:
     _title: 'Product Image Display'
   requirements:
     _permission: 'access content'
+iai_pig.create_product_node:
+  path: '/iai_pig/create_product_node'
+  defaults:
+    _controller: '\Drupal\iai_pig\Controller\CreateProductNode::createProductNode'
+    _title: 'Create Product Node'
+  requirements:
+    _permission: 'access content'
