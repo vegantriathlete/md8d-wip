@@ -1,34 +1,35 @@
-uuid: 147dc600-6c87-44fe-9591-152b0218eea8
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.test_product.field_test_product_description
-    - field.field.node.test_product.field_test_product_image
+    - field.field.node.product.body
+    - field.field.node.product.field_image
     - image.style.thumbnail
-    - node.type.test_product
+    - node.type.product
   module:
     - image
     - path
-id: node.test_product.default
+    - text
+id: node.product.default
 targetEntityType: node
-bundle: test_product
+bundle: product
 mode: default
 content:
+  body:
+    type: text_textarea_with_summary
+    weight: 31
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
   created:
     type: datetime_timestamp
     weight: 10
     settings: {  }
     third_party_settings: {  }
-  field_test_product_description:
-    weight: 33
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textarea
-  field_test_product_image:
-    weight: 32
+  field_image:
+    weight: 37
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
