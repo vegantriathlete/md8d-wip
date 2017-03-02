@@ -19,6 +19,26 @@ class ImageGalleryBlockFunctionalTest extends BrowserTestBase {
   public static $modules = array('iai_pig', 'iai_pig_product', 'block');
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    // Create and log in an administrative user.
+    $adminUser = $this->drupalCreateUser(array(
+      'administer blocks',
+      'access administration pages',
+    ));
+    $this->drupalLogin($adminUser);
+
+    // Place the block in the content area
+    $block_url = 'admin/structure/block/add/iai_product_image_gallery/classy';
+    $edit = [
+      'region' => 'content',
+    ];
+    $this->drupalPostForm($block_url, $edit, 'Save block');
+  }
+
+  /**
    * Tests a product that does not have an image attached.
    */
   public function testProductWithoutImage() {
@@ -30,13 +50,9 @@ class ImageGalleryBlockFunctionalTest extends BrowserTestBase {
     ));
     $node->save();
 
-    // Place the block in the sidebar
-    $this->drupalPlaceBlock('iai_product_image_gallery');
-
     $message = 'There were no product images to display.';
     $this->drupalGet('node/' . $node->id());
-    //$this->assertContains($message, $this->getTextContent());
-    $this->assertSession()->responseContains($message);
+    $this->assertContains($message, $this->getTextContent());
   }
 
   /**
@@ -52,12 +68,9 @@ class ImageGalleryBlockFunctionalTest extends BrowserTestBase {
     $node->field_image->generateSampleItems();
     $node->save();
 
-    // Place the block in the sidebar
-    $this->drupalPlaceBlock('iai_product_image_gallery');
-
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseContains('data-dialog-type="modal"');
-    $this->assertLinkByHref('/xiai_pig/display_product_image/' . $node->id() . '/0');
+    $this->assertLinkByHref('/iai_pig/display_product_image/' . $node->id() . '/0');
   }
 
 }
