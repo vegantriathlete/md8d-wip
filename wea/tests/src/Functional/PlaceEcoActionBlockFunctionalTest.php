@@ -50,7 +50,7 @@ class PlaceEcoActionBlockFunctionalTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the block retrieves all three water eco actions.
+   * Tests that the empty block displays a message.
    */
   public function testWEAEmptyBlockListing() {
 
