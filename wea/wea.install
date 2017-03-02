@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * Implements hook_install().
+ *
+ * @see: https://www.drupal.org/node/2599228
+ * The Functional tests that needs to create water eco action items needs this.
+ */
+function wea_install() {
+  // Ensure the translation fields are created in the database.
+  \Drupal::service('entity.definition_update_manager')->applyUpdates();
+}
