@@ -9,7 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group aquifer
  */
-class PlaceAquiferBlockTest extends BrowserTestBase {
+class PlaceAquiferBlockFunctionalTest extends BrowserTestBase {
 
   /**
    * Modules to install.
