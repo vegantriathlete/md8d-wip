@@ -110,6 +110,7 @@ class ImageGalleryBlock extends BlockBase {
           '#theme' => 'image_style',
           '#uri' => $file->getFileUri(),
           '#style_name' => 'thumbnail',
+          '#alt' => $image_data[$item_count]['alt'],
         ];
         $url = Url::fromUserInput('/iai_pig/display_product_image/' . $product->nid->value . '/' . $item_count);
         $options = array(
