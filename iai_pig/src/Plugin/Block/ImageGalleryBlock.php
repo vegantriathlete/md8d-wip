@@ -132,6 +132,7 @@ class ImageGalleryBlock extends BlockBase {
         ];
         $item_count++;
       }
+      $build['#attached']['library'][] = 'core/drupal.dialog.ajax';
     }
     else {
       // This logic is just to give some positive feedback that the block is
