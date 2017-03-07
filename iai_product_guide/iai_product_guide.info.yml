@@ -1,0 +1,5 @@
+name: Instant Aqua International Product Guide
+description: Functionality for the IAI product guides
+package: Custom
+type: module
+core: 8.x
