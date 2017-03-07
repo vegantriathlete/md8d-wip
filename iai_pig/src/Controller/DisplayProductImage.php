@@ -56,6 +56,7 @@ class DisplayProductImage extends ControllerBase {
         '#theme' => 'image_style',
         '#uri' => $file->getFileUri(),
         '#style_name' => 'large',
+        '#alt' => $image_data['alt'],
       );
     }
     else {
