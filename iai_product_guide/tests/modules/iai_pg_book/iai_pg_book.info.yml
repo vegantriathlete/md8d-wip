@@ -1,0 +1,11 @@
+name: Test Book page for IAI Product Guide
+description: Defines the Book content type and its additional fields
+package: Custom
+type: module
+core: 8.x
+dependencies:
+  - book
+  - menu_ui
+  - node
+  - text
+  - user
