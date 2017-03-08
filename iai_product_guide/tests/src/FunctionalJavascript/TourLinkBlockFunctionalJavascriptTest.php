@@ -19,15 +19,9 @@ class TourLinkBlockFunctionalJavascriptTest extends JavascriptTestBase {
   public static $modules = [
     'block',
     'book',
-    'menu_ui',
     'node',
-    'text',
     'tour',
-    'user',
     'iai_product_guide',
-    'iai_pig',
-    'iai_pg_product',
-    'iai_pg_book',
   ];
 
   /**
@@ -43,11 +37,9 @@ class TourLinkBlockFunctionalJavascriptTest extends JavascriptTestBase {
     $this->drupalLogin($adminUser);
 
     // Place the blocks in the content area
-    $block_url = 'admin/structure/block/add/iai_product_image_gallery/classy';
     $edit = [
       'region' => 'content',
     ];
-    $this->drupalPostForm($block_url, $edit, 'Save block');
     $block_url = 'admin/structure/block/add/iai_tour_link/classy';
     $this->drupalPostForm($block_url, $edit, 'Save block');
     $this->drupalLogout();
@@ -58,29 +50,28 @@ class TourLinkBlockFunctionalJavascriptTest extends JavascriptTestBase {
    */
   public function testTourLink() {
 
-    // Create a product piece of content
-    $product = $this->drupalCreateNode(array(
-      'title' => t('Product with an image'),
-      'type' => 'product',
-    ));
-    $product->field_image->generateSampleItems();
-    $product->save();
-
-    // Create a book page
+    // Create a book with some pages
+    // We don't really care whether the pages reference products for the
+    // purpose of this test.
     $book = $this->drupalCreateNode(array(
       'title' => t('Product User Guide'),
       'type' => 'book',
-      //'field_product' => array(
-        //'target_id' => $product->id(),
-      //),
+      'book' => ['bid' => 'new'],
     ));
-// I am having zero success getting the field_product to be recognized. When I set the
-// configuration in config/install instead of config/optional I get an error that there are
-// unmet dependencies; that is why field_product is not being defined. I can't figure out
-// what the unmet dependencies are, though.
-    //$book->set('field_product', $product->id());
     $book->save();
-//$this->assertSame('debug', $book);
+
+    $page1 = $this->drupalCreateNode([
+      'type' => 'book',
+      'title' => '1st page',
+      'book' => ['bid' => $book->id(), 'pid' => $book->id(), 'weight' => 0],
+    ]);
+    $page1->save();
+    $page2 = $this->drupalCreateNode([
+      'type' => 'book',
+      'title' => '2nd page',
+      'book' => ['bid' => $book->id(), 'pid' => $book->id(), 'weight' => 1],
+    ]);
+    $page2->save();
 
     // Create and log in a user.
     $testUser = $this->drupalCreateUser(array(
@@ -89,16 +80,21 @@ class TourLinkBlockFunctionalJavascriptTest extends JavascriptTestBase {
     ));
     $this->drupalLogin($testUser);
 
+    // We are testing just to see that our tour link appears . . .
     $this->drupalGet('node/' . $book->id());
     $page = $this->getSession()->getPage();
     $targetLink = $page->findLink('Take the tour!');
     $this->assertNotEmpty($targetLink);
     $targetLink->click();
-// The screen shot is not showing the tip on the page
-$this->createScreenshot('/tmp/bookPage-' . time() . '.jpg');
-    $targetTip = $page->find('css', '.tip-introduction');
-// and the assertion ends up being false
-    $this->assert($targetTip->isVisible());
+    // we get the first tour item when we click the link . . .
+    $condition = "(jQuery('.tip-introduction').is(':visible'))";
+    $this->assertJsCondition($condition);
+    $targetLink = $page->findLink('Next');
+    $this->assertNotEmpty($targetLink);
+    $targetLink->click();
+    // and we can get to the second tour item.
+    $condition = "(jQuery('.tip-reading-the-book-page').is(':visible'))";
+    $this->assertJsCondition($condition);
   }
 
 }
