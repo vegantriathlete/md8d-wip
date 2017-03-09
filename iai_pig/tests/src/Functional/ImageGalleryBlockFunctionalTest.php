@@ -70,7 +70,7 @@ class ImageGalleryBlockFunctionalTest extends BrowserTestBase {
 
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseContains('data-dialog-type="modal"');
-    $this->assertLinkByHref('/iai_pig/display_product_image/' . $node->id() . '/0');
+    $this->assertSession()->LinkByHrefExists('/iai_pig/display_product_image/' . $node->id() . '/0');
   }
 
 }

@@ -75,7 +75,7 @@ class ImageGalleryBlockFunctionalJavascriptTest extends JavascriptTestBase {
     $page = $this->getSession()->getPage();
     $targetLink = $page->findLink($altText);
     $this->assertSession()->responseContains('data-dialog-type="modal"');
-    $this->assertLinkByHref('/iai_pig/display_product_image/' . $node->id() . '/0');
+    $this->assertSession()->LinkByHrefExists('/iai_pig/display_product_image/' . $node->id() . '/0');
     $this->assertNotEmpty($targetLink);
     $targetLink->click();
     $condition = "(jQuery('#drupal-modal').length > 0)";
