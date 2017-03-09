@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\aquifer\Functional;
+namespace Drupal\Tests\wea\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
@@ -42,11 +42,11 @@ class PlaceEcoActionBlockFunctionalTest extends BrowserTestBase {
     $this->drupalGet('');
     $page_text = $this->getTextContent();
     $this->assertContains('Oil Spill', $page_text);
-    $this->assertLinkByHref('/node/1');
+    $this->assertSession()->LinkByHrefExists('/node/1');
     $this->assertContains('Beach Cleanup', $page_text);
-    $this->assertLinkByHref('/node/2');
+    $this->assertSession()->LinkByHrefExists('/node/2');
     $this->assertContains('Test for contaminants', $page_text);
-    $this->assertLinkByHref('/node/3');
+    $this->assertSession()->LinkByHrefExists('/node/3');
   }
 
   /**
