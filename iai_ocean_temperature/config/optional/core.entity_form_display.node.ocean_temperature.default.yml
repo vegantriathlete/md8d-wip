@@ -10,8 +10,6 @@ dependencies:
   module:
     - datetime
     - path
-_core:
-  default_config_hash: ikDYwzwIhxIWtVlHpEG6FAIhaITV4JAvwyjgGIjwsx0
 id: node.ocean_temperature.default
 targetEntityType: node
 bundle: ocean_temperature

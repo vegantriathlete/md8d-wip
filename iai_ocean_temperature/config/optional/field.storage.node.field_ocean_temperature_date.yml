@@ -4,8 +4,6 @@ dependencies:
   module:
     - datetime
     - node
-_core:
-  default_config_hash: 2uSZczpsArwq62xACFYGPFJVyoh8YbVfjzy_Dn3VIqw
 id: node.field_ocean_temperature_date
 field_name: field_ocean_temperature_date
 entity_type: node

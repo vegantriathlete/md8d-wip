@@ -3,8 +3,6 @@ status: true
 dependencies:
   module:
     - node
-_core:
-  default_config_hash: d1BCRNHC8JSYdcHyNTdvdBcGAFRBm12Alnx23CzGcbw
 id: node.field_ocean_temperature_temp
 field_name: field_ocean_temperature_temp
 entity_type: node

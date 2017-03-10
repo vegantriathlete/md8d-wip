@@ -8,8 +8,6 @@ dependencies:
     - node.type.ocean_temperature
   module:
     - user
-_core:
-  default_config_hash: fHFZRNdWg0emcu_HA2FXvDUVycJ3BmpzVcCgWM_8ZS0
 id: node.ocean_temperature.teaser
 targetEntityType: node
 bundle: ocean_temperature
