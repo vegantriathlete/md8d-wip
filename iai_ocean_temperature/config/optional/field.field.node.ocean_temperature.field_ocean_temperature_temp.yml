@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ocean_temperature_temp
+    - node.type.ocean_temperature
+id: node.ocean_temperature.field_ocean_temperature_temp
+field_name: field_ocean_temperature_temp
+entity_type: node
+bundle: ocean_temperature
+label: Temperature
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: (F)
+field_type: decimal

@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ocean_temperature_date
+    - node.type.ocean_temperature
+  module:
+    - datetime
+id: node.ocean_temperature.field_ocean_temperature_date
+field_name: field_ocean_temperature_date
+entity_type: node
+bundle: ocean_temperature
+label: 'Reading Date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

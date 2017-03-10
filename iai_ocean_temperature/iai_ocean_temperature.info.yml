@@ -1,0 +1,12 @@
+name: Ocean Temperature
+description: The custom content type (iai_ocean_temperature) and all of its corresponding functionality
+package: Custom
+type: module
+core: 8.x
+dependencies:
+  - content_translation
+  - datetime
+  - menu_ui
+  - node
+  - path
+  - user

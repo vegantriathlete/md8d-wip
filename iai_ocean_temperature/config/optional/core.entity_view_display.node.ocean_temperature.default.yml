@@ -1,0 +1,37 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.ocean_temperature.field_ocean_temperature_date
+    - field.field.node.ocean_temperature.field_ocean_temperature_temp
+    - node.type.ocean_temperature
+  module:
+    - datetime
+    - user
+id: node.ocean_temperature.default
+targetEntityType: node
+bundle: ocean_temperature
+mode: default
+content:
+  field_ocean_temperature_date:
+    weight: 102
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+  field_ocean_temperature_temp:
+    weight: 101
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+  links:
+    weight: 100
+hidden:
+  langcode: true
