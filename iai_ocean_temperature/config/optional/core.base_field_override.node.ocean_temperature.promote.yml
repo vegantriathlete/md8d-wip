@@ -3,6 +3,8 @@ status: true
 dependencies:
   config:
     - node.type.ocean_temperature
+_core:
+  default_config_hash: Zlgdi_3E6RbS6RhOh4548pP_AOqopLZpJotUKzCs_3o
 id: node.ocean_temperature.promote
 field_name: promote
 entity_type: node

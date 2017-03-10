@@ -6,6 +6,8 @@ dependencies:
     - node.type.ocean_temperature
   module:
     - datetime
+_core:
+  default_config_hash: N6EtT6sA6n3blBQOd2bcncFLB56724ysFxwK28I4V_Y
 id: node.ocean_temperature.field_ocean_temperature_date
 field_name: field_ocean_temperature_date
 entity_type: node

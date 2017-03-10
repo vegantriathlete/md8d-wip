@@ -3,15 +3,14 @@ status: true
 dependencies:
   module:
     - node
-_core:
-  default_config_hash: d1BCRNHC8JSYdcHyNTdvdBcGAFRBm12Alnx23CzGcbw
-id: node.field_ocean_temperature_temp
-field_name: field_ocean_temperature_temp
+id: node.field_ocean_temperature_location
+field_name: field_ocean_temperature_location
 entity_type: node
-type: decimal
+type: string
 settings:
-  precision: 10
-  scale: 2
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
 module: core
 locked: false
 cardinality: 1

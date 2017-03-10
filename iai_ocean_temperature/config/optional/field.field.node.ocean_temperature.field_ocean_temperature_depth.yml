@@ -2,15 +2,13 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_ocean_temperature_temp
+    - field.storage.node.field_ocean_temperature_depth
     - node.type.ocean_temperature
-_core:
-  default_config_hash: 5OrelN5CYPlo_7F2UUHZV6l1fkZsKNq8aEdCBSjCERA
-id: node.ocean_temperature.field_ocean_temperature_temp
-field_name: field_ocean_temperature_temp
+id: node.ocean_temperature.field_ocean_temperature_depth
+field_name: field_ocean_temperature_depth
 entity_type: node
 bundle: ocean_temperature
-label: Temperature
+label: Depth
 description: ''
 required: false
 translatable: true
@@ -20,5 +18,5 @@ settings:
   min: null
   max: null
   prefix: ''
-  suffix: (F)
+  suffix: (ft)
 field_type: decimal

@@ -3,9 +3,13 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.ocean_temperature.field_ocean_temperature_date
+    - field.field.node.ocean_temperature.field_ocean_temperature_temp
     - node.type.ocean_temperature
   module:
     - user
+_core:
+  default_config_hash: fHFZRNdWg0emcu_HA2FXvDUVycJ3BmpzVcCgWM_8ZS0
 id: node.ocean_temperature.teaser
 targetEntityType: node
 bundle: ocean_temperature
@@ -14,4 +18,6 @@ content:
   links:
     weight: 100
 hidden:
+  field_ocean_temperature_date: true
+  field_ocean_temperature_temp: true
   langcode: true

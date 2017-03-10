@@ -3,11 +3,15 @@ status: true
 dependencies:
   config:
     - field.field.node.ocean_temperature.field_ocean_temperature_date
+    - field.field.node.ocean_temperature.field_ocean_temperature_depth
+    - field.field.node.ocean_temperature.field_ocean_temperature_location
     - field.field.node.ocean_temperature.field_ocean_temperature_temp
     - node.type.ocean_temperature
   module:
     - datetime
     - path
+_core:
+  default_config_hash: ikDYwzwIhxIWtVlHpEG6FAIhaITV4JAvwyjgGIjwsx0
 id: node.ocean_temperature.default
 targetEntityType: node
 bundle: ocean_temperature
@@ -23,6 +27,19 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
+  field_ocean_temperature_depth:
+    weight: 34
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+  field_ocean_temperature_location:
+    weight: 33
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
   field_ocean_temperature_temp:
     weight: 31
     settings:

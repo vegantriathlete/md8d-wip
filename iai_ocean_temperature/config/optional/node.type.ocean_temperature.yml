@@ -7,9 +7,11 @@ third_party_settings:
   menu_ui:
     available_menus: {  }
     parent: ''
+_core:
+  default_config_hash: zsX37rNCQVIz-V2YHGbL-X_I-qrk9kXWlHO4YGZxF0w
 name: 'Ocean Temperature'
 type: ocean_temperature
-description: ''
+description: 'Data about ocean temperature throughout the world. Contributors use a REST service that this site provides to submit their data.'
 help: ''
 new_revision: false
 preview_mode: 0
