@@ -112,7 +112,6 @@ class ImageGalleryBlock extends BlockBase {
           '#style_name' => 'thumbnail',
           '#alt' => $image_data[$item_count]['alt'],
         ];
-        $url = Url::fromUserInput('/iai_pig/display_product_image/' . $product->nid->value . '/' . $item_count);
         $options = array(
           'attributes' => array(
             'class' => array(
@@ -124,6 +123,9 @@ class ImageGalleryBlock extends BlockBase {
             ]),
           ),
         );
+        // @todo: Don't use fromUserInput. Change it to use a route name and
+        //        its arguments.
+        $url = Url::fromUserInput('/iai_pig/display_product_image/' . $product->nid->value . '/' . $item_count);
         $url->setOptions($options);
         $build['list']['#items'][$item_count] = [
           '#type' => 'markup',
