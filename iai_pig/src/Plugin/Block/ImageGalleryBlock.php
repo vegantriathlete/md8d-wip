@@ -112,6 +112,7 @@ class ImageGalleryBlock extends BlockBase {
           '#style_name' => 'thumbnail',
           '#alt' => $image_data[$item_count]['alt'],
         ];
+        // @see: https://www.drupal.org/node/2488192
         $options = array(
           'attributes' => array(
             'class' => array(
