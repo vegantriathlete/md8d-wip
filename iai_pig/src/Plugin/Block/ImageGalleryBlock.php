@@ -161,9 +161,7 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
             ]),
           ),
         );
-        // @todo: Don't use fromUserInput. Change it to use a route name and
-        //        its arguments.
-        $url = Url::fromUserInput('/iai_pig/display_product_image/' . $product->nid->value . '/' . $item_count);
+        $url = Url::fromRoute('iai_pig.display_product_image', array('node' => $product->nid->value, 'delta' => $item_count));
         $url->setOptions($options);
         $build['list']['#items'][$item_count] = [
           '#type' => 'markup',
