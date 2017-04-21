@@ -1,0 +1,20 @@
+<?php
+
+namespace Drupal\iai_product;
+
+/**
+ * An implementation of ProductManagerServiceInterface.
+ */
+class ProductManagerService implements ProductManagerServiceInterface{
+
+  /**
+   * {@inheritdoc}
+   */
+  public function retrieveProductImages(NodeInterface $product) {
+    $image_data = [];
+    foreach ($product->field_product_image as $productImage) {
+      $imageData[] = $productImage->getValue();
+    }
+    return $imageData;
+  }
+}
