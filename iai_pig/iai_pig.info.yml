@@ -3,3 +3,5 @@ description: Provides functionality to display product image galleries based on 
 package: Custom
 type: module
 core: 8.x
+dependencies:
+  - iai_product
