@@ -6,9 +6,12 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\iai_product\ProductManagerServiceInterface;
 use Drupal\node\Entity\Node;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides an image gallery block.
@@ -40,7 +43,43 @@ use Drupal\node\Entity\Node;
  *       elsewhere. We are making certain assumptions to keep the example
  *       relatively simple.
  */
-class ImageGalleryBlock extends BlockBase {
+class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The Product Manager Service.
+   *
+   * @var \Drupal\iai_product\ProductManagerServiceInterface
+   */
+  protected $productManagerService;
+
+  /**
+   * Constructs Product Image Gallery block object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\iai_product\ProductManagerServiceInterface
+   *   $product_manager_service
+   *   The Product Manager Service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ProductManagerServiceInterface $product_manager_service) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->productManagerService = $product_manager_service;
+  }
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('iai_product.product_manager_service')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -86,7 +125,7 @@ class ImageGalleryBlock extends BlockBase {
     if ($product) {
 
       // Retrieve the product images
-      $image_data = $this->getImageData($product);
+      $image_data = $this->productManagerService->retrieveProductImages($product);
       $block_count = $this->configuration['block_count'];
       $item_count = 0;
       $build['list'] = [
@@ -189,13 +228,5 @@ class ImageGalleryBlock extends BlockBase {
     else {
       return NULL;
     }
-  }
-
-  private function getImageData($product) {
-    $image_data = array();
-    foreach ($product->field_image as $image) {
-      $image_data[] = $image->getValue();
-    }
-    return $image_data;
   }
 }
