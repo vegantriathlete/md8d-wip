@@ -9,7 +9,9 @@ namespace Drupal\iai_pig\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\file\Entity\File;
+use Drupal\iai_product\ProductManagerServiceInterface;
 use Drupal\node\Entity\Node;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Display a given image for a given product
@@ -25,6 +27,28 @@ class DisplayProductImage extends ControllerBase {
    */
 
   /**
+   * Presentation Manager Service.
+   *
+   * @var \Drupal\iai_product\ProductManagerServiceInterface
+   */
+  protected $productManagerService;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(ProductManagerServiceInterface $product_manager_service) {
+    $this->productManagerService = $product_manager_service;
+  }
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('iai_product.product_manager_service')
+    );
+  }
+
+  /**
    * Display a (translated) product image
    *
    * @param \Drupal\node\Entity\Node $node
@@ -36,22 +60,14 @@ class DisplayProductImage extends ControllerBase {
    *   The render array
    */
   public function displayProductImage(Node $node, $delta) {
-    // Note: We are making an assumption about a particular field name that
-    //       Products use for the images. We did not define the Product content
-    //       type with a custom module (which would allow us to have the module
-    //       as a dependency, and thus ensure that the field name exists)
-    //       because the Product was defined in the section of the course in
-    //       which we were using only Core functionality. We had not yet started
-    //       writing any custom code.
-
     // @todo: Make sure to use a particular image preset.
     //        I wonder if I should have the iai_pig module define a preset
     //        For the moment I am using the "large" image preset, which is
     //        defined by the Standard installation profile.
 
-    if (isset($node->field_image[$delta])) {
-      $image_data = $node->field_image[$delta]->getValue();
-      $file = File::load($image_data['target_id']);
+    $productImages = $this->productManagerService->retrieveProductImages($node);
+    if (isset($productImages[$delta])) {
+      $file = File::load($productImages[$delta]['target_id']);
       $render_array['image_data'] = array(
         '#theme' => 'image_style',
         '#uri' => $file->getFileUri(),
