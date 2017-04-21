@@ -141,14 +141,12 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
         '#markup' => $this->t('There were no product images to display.')
       ];
 
-      // Note: We are using the "thumbnail" image preset, which is defined by
-      //       the Standard installation profile.
       while ($item_count < $block_count && isset($image_data[$item_count])) {
         $file = File::load($image_data[$item_count]['target_id']);
         $link_text = [
           '#theme' => 'image_style',
           '#uri' => $file->getFileUri(),
-          '#style_name' => 'thumbnail',
+          '#style_name' => 'product_thumbnail',
           '#alt' => $image_data[$item_count]['alt'],
         ];
         // @see: https://www.drupal.org/node/2488192
