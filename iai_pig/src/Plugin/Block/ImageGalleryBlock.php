@@ -212,12 +212,8 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
 
   private function getReferencedProduct($node) {
     // Note: We are making an assumption about a particular field name that
-    //       Book pages use for the entity reference to products. We did not
-    //       define the Product content type with a custom module (which would
-    //       allow us to have the module as a dependency, and thus ensure that
-    //       the field name exists) because the Product was defined in the
-    //       section of the course in which we were using only Core
-    //       functionality. We had not yet started writing any custom code.
+    //       Book pages use for the entity reference to products. We added this
+    //       field to the book pages ourselves.
     if (isset($node->field_product)) {
       $referenced_entities = $node->field_product->referencedEntities();
       $node = $referenced_entities[0];
