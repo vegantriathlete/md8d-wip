@@ -2,6 +2,8 @@
 
 namespace Drupal\iai_product;
 
+use Drupal\node\NodeInterface;
+
 /**
  * An implementation of ProductManagerServiceInterface.
  */
