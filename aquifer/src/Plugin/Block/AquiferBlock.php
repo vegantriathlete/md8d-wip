@@ -122,14 +122,12 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
           '#markup' => $item->label(),
         ];
       }
+      // We don't really need to worry about expiring the cache because we've
+      // got only three aquifers. But, we are going to set the meta data so
+      // that when pieces of content are updated we make sure to rebuild this
+      // block. You can learn more about the Cache API in the Appendix.
+      $build['#cache']['tags'][] = 'node_list';
       return $build;
     }
   }
-
-  // We have not done anything with cache tags; the results of this block get
-  // cached. If you add or delete aquifer pieces of content, you won't see
-  // those changes reflected in this block unless you get the cache to clear.
-  // One way to do this (which is faster than clearing the cache for the entire
-  // site) is to go into the block layout and configure and save this block.
-
 }
