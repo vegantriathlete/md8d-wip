@@ -75,6 +75,7 @@ function aquifer_cron() {
     $queue->createItem($aquifer_data);
   }
 
+  // We update the state storage system to indicate when this cron job ran.
   \Drupal::state()->set('aquifer_update.last_run', REQUEST_TIME);
 }
 
