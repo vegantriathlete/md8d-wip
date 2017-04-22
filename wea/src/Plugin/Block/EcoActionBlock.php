@@ -152,13 +152,7 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
         '#markup' => t('There are no actions in your area.'),
       ];
     }
+    $build['#cache']['tags'][] = 'node_list';
     return $build;
   }
-
-  // We have not done anything with cache tags; the results of this block get
-  // cached. If you add or delete wea pieces of content, you won't see
-  // those changes reflected in this block unless you get the cache to clear.
-  // One way to do this (which is faster than clearing the cache for the entire
-  // site) is to go into the block layout and configure and save this block.
-
 }
