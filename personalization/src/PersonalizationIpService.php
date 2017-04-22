@@ -21,6 +21,13 @@ class PersonalizationIpService implements PersonalizationIpServiceInterface {
    *   The request stack.
    */
   public function __construct(RequestStack $request_stack) {
+    // You can learn more about Symfony's Request object by looking at
+    // vendor/symfony/http-foundation/Request.php
+    // relative to your Drupal root.
+    // @see: http://api.symfony.com/3.1/Symfony/Component/HttpFoundation/Request.html
+    // Also @see: http://symfony.com/blog/new-in-symfony-2-4-the-request-stack
+    // Also @see: http://symfony.com/doc/current/components/http_foundation.html
+    // Also @see: http://symfony.com/doc/current/introduction/http_fundamentals.html
     $this->request = $request_stack->getCurrentRequest();
   }
 
