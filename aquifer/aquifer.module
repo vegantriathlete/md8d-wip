@@ -8,6 +8,11 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
+ * @see: https://api.drupal.org/api/drupal/core%21core.api.php/group/hooks/8.3.x
+ *       to learn more about Drupal's hook system.
+ */
+
+/**
  * Implements hook_help().
  */
 function aquifer_help($route_name, RouteMatchInterface $route_match) {
@@ -44,11 +49,21 @@ function aquifer_cron() {
    *       queue workers.
    */
 
+/**
+ * @see: https://api.drupal.org/api/drupal/core%21lib%21Drupal.php/class/Drupal/8.3.x
+ *       to learn more about Drupal's global class.
+ */
+
   // Ensure that our cron job runs only once each day
   $last_run = \Drupal::state()->get('aquifer_update.last_run') ?: 0;
   if ((REQUEST_TIME - $last_run) < ( 24 * 60 * 60) ) {
     return;
   }
+
+/**
+ * @see: https://api.drupal.org/api/drupal/core%21core.api.php/group/queue/8.3.x
+ *       to learn more about Drupal's queue system.
+ */
 
   $queue = \Drupal::queue('aquifer_updates');
 
