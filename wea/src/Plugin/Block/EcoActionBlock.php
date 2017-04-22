@@ -139,7 +139,7 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
         '#items' => [],
       ];
       foreach ($items as $item) {
-        $url = Url::fromUserInput('/node/' . $item->nid->value);
+        $url = Url::fromRoute('entity.node.canonical', array('node' => $item->nid->value));
         $build['list']['#items'][$item->id()] = [
           '#type' => 'markup',
           '#markup' => Link::fromTextAndUrl($item->label(), $url)->toString(),
