@@ -3,7 +3,7 @@
 namespace Drupal\aquifer\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -38,9 +38,17 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   Entity storage for node entities.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $node_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->nodeStorage = $node_storage;
+    // Note: We could have just as easily passed the EntityStorageInterface
+    //       directly by injecting the node storage object like:
+    //       $container->get('entity_type.manager')->getStorage('node').
+    //       Had we gone this route, then we would need to use (above)
+    //       Drupal\Core\Entity\EntityStorageInterface instead of
+    //       Drupal\Core\Entity\EntityTypeManagerInterface and we would also
+    //       need to change our typehinting to use EntityStorageInterface
+    //       instead of EntityTypeManagerInterface.
+    $this->nodeStorage = $entity_type_manager->getStorage('node');
   }
 
   /**
@@ -51,7 +59,7 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')->getStorage('node')
+      $container->get('entity_type.manager')
     );
   }
 
