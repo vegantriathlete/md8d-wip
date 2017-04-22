@@ -50,6 +50,15 @@ class PersonalizationIpService implements PersonalizationIpServiceInterface {
    *   The latitude / longitude coordinates for that Ip address
    */
   private function convertIpToCoordinates($ip) {
+    // Obviously, this method is hard-coded to return the same thing every
+    // time. This is why we have chosen to make it a private method. In a
+    // true application we would likely have a method of a service that would
+    // be responsible for completing the conversion. Perhaps it would be a
+    // method of this service (in other words, this very method) and perhaps it
+    // would part of a separate service. In any case, we would most likely make
+    // the method public. The method might do all the work on its own or the
+    // method might rely on some other service, which could potentially be an
+    // external one.
     return '39.7392° N, 104.9903° W';
   }
 
