@@ -1,6 +1,12 @@
 <?php
 
-$rest_uri = 'http://testmd8ddev/views/wea';
+/******************************************************************************
+ **                                                                          **
+ ** Remember to include the domain as a query argument!                      **
+ **                                                                          **
+ ******************************************************************************/
+$domain = $_GET['domain'];
+$rest_uri = 'http://' . $domain . '/views/wea';
 
 // Execute a cURL call
 $curlExecutor = new curlExecutor($rest_uri);

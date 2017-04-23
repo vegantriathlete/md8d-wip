@@ -2,11 +2,13 @@
 
 /******************************************************************************
  **                                                                          **
+ ** Remember to include the domain as a query argument!                      **
  ** Remember to include the item number as a query argument!                 **
  **                                                                          **
  ******************************************************************************/
+$domain = $_GET['domain'];
 $item = $_GET['item'];
-$rest_uri = 'http://testmd8ddev/views/wea/' . $item;
+$rest_uri = 'http://' . $domain . '/views/wea/' . $item;
 
 // Execute a cURL call
 $curlExecutor = new curlExecutor($rest_uri);
