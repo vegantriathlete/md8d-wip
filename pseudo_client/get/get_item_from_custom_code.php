@@ -1,11 +1,34 @@
 <?php
 
-// Execute a cURL call
+/******************************************************************************
+ **                                                                          **
+ ** Remember to include the domain as a query argument!                      **
+ ** Remember to include the item number as a query argument!                 **
+ **                                                                          **
+ ******************************************************************************/
+$domain = $_GET['domain'];
+$item = $_GET['item'];
 
-$rest_uri = 'http://testmd8ddev/wea/actions/22?_format=json';
+/******************************************************************************
+ **                                                                          **
+ ** Note that we are appending the _format query argument. This tells the    **
+ ** Serialization module how to serialize our response for us. We don't have **
+ ** to worry about doing the serialization ourselves!                        **
+ **                                                                          **
+ ******************************************************************************/
+$rest_uri = 'http://' . $domain . '/wea/actions/' . $item . '?_format=json';
+
+// Execute a cURL call
 $curlExecutor = new curlExecutor($rest_uri);
 $results = $curlExecutor->getRecords();
 $decoded_results = json_decode($results);
+
+/******************************************************************************
+ **                                                                          **
+ ** We are going to display the results of our cURL request as a simple      **
+ ** HTML page.                                                               **
+ **                                                                          **
+ ******************************************************************************/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +39,17 @@ $decoded_results = json_decode($results);
   <body>
     <h1>This is the data received.</h1>
 <?php
+
+/******************************************************************************
+ **                                                                          **
+ ** Note how much more intuitive our fields are. There is no nesting and the **
+ ** fields names are what people would guess them to be.                     **
+ **                                                                          **
+ ** We haven't bothered to do any type of error checking. So, we may get     **
+ ** various Notices, Warnings or Errors depending on what item we've         **
+ ** requested.                                                               **
+ **                                                                          **
+ ******************************************************************************/
   echo "<ul>";
   echo "<li>Title: " . $decoded_results->title . "</li>";
   echo "<li>Coordinates: " . $decoded_results->coordinates . "</li>";
