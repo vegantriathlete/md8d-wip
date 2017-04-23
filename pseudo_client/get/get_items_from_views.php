@@ -1,11 +1,18 @@
 <?php
 
-// Execute a cURL call
-
 $rest_uri = 'http://testmd8ddev/views/wea';
+
+// Execute a cURL call
 $curlExecutor = new curlExecutor($rest_uri);
 $results = $curlExecutor->getRecords();
 $decoded_results = json_decode($results);
+
+/******************************************************************************
+ **                                                                          **
+ ** We are going to display the results of our cURL request as a simple      **
+ ** HTML page.                                                               **
+ **                                                                          **
+ ******************************************************************************/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,15 +50,7 @@ class curlExecutor {
     // Setup the cURL request.
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $this->restURI);
-    //curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    //curl_setopt($ch, CURLOPT_NOPROGRESS, 1);
-    //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-    //$headers = array(
-    //  'Accept: application/xml'
-    //);
-    //curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     $result = curl_exec($ch);
     // Report any errors
     if ($error = curl_error($ch)) {
