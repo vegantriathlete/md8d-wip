@@ -2,7 +2,7 @@
 
 // Execute a cURL call
 
-$rest_uri = 'http://testmd8ddev/views/wea';
+$rest_uri = 'http://testmd8ddev/views/wea/64';
 $curlExecutor = new curlExecutor($rest_uri);
 $results = $curlExecutor->getRecords();
 $decoded_results = json_decode($results);
