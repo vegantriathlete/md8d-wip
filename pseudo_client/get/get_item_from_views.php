@@ -2,7 +2,8 @@
 
 // Execute a cURL call
 
-$rest_uri = 'http://testmd8ddev/views/wea/64';
+$item = $_GET['item'];
+$rest_uri = 'http://testmd8ddev/views/wea/' . $item;
 $curlExecutor = new curlExecutor($rest_uri);
 $results = $curlExecutor->getRecords();
 $decoded_results = json_decode($results);
