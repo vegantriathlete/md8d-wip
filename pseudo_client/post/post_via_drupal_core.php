@@ -34,7 +34,7 @@ $timestamp = date('F j, Y g:i a');
 $post_fields = array(
   '_links' => array(
     'type' => array(
-      'href' => 'http://testmd8ddev/rest/type/node/water_eco_action',
+      'href' => 'http://' . $domain . '/rest/type/node/water_eco_action',
     ),
   ),
   'title' => array(0 => array('value' => 'My POSTed WEA - ' . $timestamp)),
