@@ -10,6 +10,15 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/******************************************************************************
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://www.drupal.org/docs/8/api/restful-web-services-api/restful-web-services-api-overview
+ ** and the "Creating REST resource plugins" section to learn more about     **
+ ** uri_paths.                                                               **
+ **                                                                          **
+ ******************************************************************************/
+
 /**
  * Provides a resource to list water eco action items.
  *
@@ -101,17 +110,42 @@ class WEAResourceList extends ResourceBase {
       $items = $this->nodeStorage->loadMultiple($result);
       foreach ($items as $item) {
         $translated_item = $item->getTranslation($this->currentLanguage->getId());
-        $record[] = [
-          'id' => $item->nid->value,
-          'title' => $translated_item->getTitle()
-        ];
+
+/******************************************************************************
+ **                                                                          **
+ ** Make sure that you check that the client has access! You don't want your **
+ ** REST resources to create access bypass vulnerabilities.                  **
+ **                                                                          **
+ ******************************************************************************/
+        $item_access = $translated_item->access('view', NULL, TRUE);
+        if ($item_access->isAllowed()) {
+          $record[] = [
+            'id' => $item->nid->value,
+            'title' => $translated_item->getTitle()
+          ];
+        }
       }
     }
+
+/******************************************************************************
+ **                                                                          **
+ ** We don't need to worry about how to serialize our data. Drupal will take **
+ ** care of that for us!                                                     **
+ **                                                                          **
+ ******************************************************************************/
     if (!empty($record)) {
       $response = new ResourceResponse($record);
       $response->addCacheableDependency($record);
       return $response;
     }
+
+/******************************************************************************
+ **                                                                          **
+ ** We need to make sure that our method returns something, even if that is  **
+ ** an exception that we throw. Drupal will turn the exception into a        **
+ ** response.                                                                **
+ **                                                                          **
+ ******************************************************************************/
     throw new NotFoundHttpException(t('No water eco action items were found.'));
 
   }

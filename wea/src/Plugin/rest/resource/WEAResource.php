@@ -16,6 +16,15 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/******************************************************************************
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://www.drupal.org/docs/8/api/restful-web-services-api/restful-web-services-api-overview
+ ** and the "Creating REST resource plugins" section to learn more about     **
+ ** uri_paths.                                                               **
+ **                                                                          **
+ ******************************************************************************/
+
 /**
  * Provides a resource for a water eco action item.
  *
@@ -102,6 +111,13 @@ class WEAResource extends ResourceBase {
   public function get($id) {
     if ($node = Node::load($id)) {
       $translated_node = $node->getTranslation($this->currentLanguage->getId());
+
+/******************************************************************************
+ **                                                                          **
+ ** Make sure that you check that the client has access! You don't want your **
+ ** REST resources to create access bypass vulnerabilities.                  **
+ **                                                                          **
+ ******************************************************************************/
       $node_access = $translated_node->access('view', NULL, TRUE);
       if (!$node_access->isAllowed()) {
         throw new AccessDeniedHttpException();
@@ -140,6 +156,12 @@ class WEAResource extends ResourceBase {
       throw new BadRequestHttpException('No data received.');
     }
 
+/******************************************************************************
+ **                                                                          **
+ ** Make sure that you check that the client has access! You don't want your **
+ ** REST resources to create access bypass vulnerabilities.                  **
+ **                                                                          **
+ ******************************************************************************/
     if (!$this->currentUser->hasPermission('create water_eco_action content')) {
       throw new AccessDeniedHttpException();
     }
@@ -191,6 +213,13 @@ class WEAResource extends ResourceBase {
       if ($node->getType() != 'water_eco_action') {
         throw new BadRequestHttpException('You have not requested a Water Eco Action item.');
       }
+
+/******************************************************************************
+ **                                                                          **
+ ** Make sure that you check that the client has access! You don't want your **
+ ** REST resources to create access bypass vulnerabilities.                  **
+ **                                                                          **
+ ******************************************************************************/
       if (!$node->access('update')) {
         throw new AccessDeniedHttpException();
       }
@@ -253,6 +282,13 @@ class WEAResource extends ResourceBase {
       if ($node->getType() != 'water_eco_action') {
         throw new BadRequestHttpException('You have not requested a Water Eco Action item.');
       }
+
+/******************************************************************************
+ **                                                                          **
+ ** Make sure that you check that the client has access! You don't want your **
+ ** REST resources to create access bypass vulnerabilities.                  **
+ **                                                                          **
+ ******************************************************************************/
       if (!$node->access('delete')) {
         throw new AccessDeniedHttpException();
       }
