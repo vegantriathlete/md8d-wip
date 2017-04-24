@@ -120,6 +120,7 @@ class curlExecutor {
     $data = json_encode($this->postFields);
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $this->restURI);
+    // cURL doesn't have a CURLOPT_PATCH option.
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
