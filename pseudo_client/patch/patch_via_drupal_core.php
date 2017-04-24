@@ -29,6 +29,14 @@ $timestamp = date('F j, Y g:i a');
 // how to build the links key is to first to a "GET" on the node type you wish
 // to build and examine the response. Doing this also helps you figure out how
 // to build the rest of the data.
+
+/******************************************************************************
+ **                                                                          **
+ ** We still need to use the _links => type combination with a PATCH. Then   **
+ ** we specify only the fields we want to update. Drupal will leave the      **
+ ** remaining fields unchanged.                                              **
+ **                                                                          **
+ ******************************************************************************/
 $post_fields = array(
   '_links' => array(
     'type' => array(

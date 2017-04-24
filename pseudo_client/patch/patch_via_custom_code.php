@@ -32,6 +32,13 @@ if (isset($_GET['format'])) {
  ******************************************************************************/
 $rest_uri = 'http://' . $domain . '/wea/actions/' . $item . '?_format=' . $format;
 $timestamp = date('F j, Y g:i a');
+
+/******************************************************************************
+ **                                                                          **
+ ** We specify only the fields we want to update. Our resource (and Drupal)  **
+ ** will leave the remaining fields unchanged.                               **
+ **                                                                          **
+ ******************************************************************************/
 $post_fields = array(
   'title' => 'My custom PATCHed WEA - ' . $timestamp,
   'description' => 'I successfully updated this with a PATCH operation at ' . $timestamp . '! And I did it with my custom REST URI, to boot.',
