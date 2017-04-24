@@ -42,6 +42,9 @@ $post_fields = array(
   'langcode' => array(0 => array('value' => 'en')),
   'field_wea_description' => array(0 => array('value' => 'I successfully created this with a POST operation at ' . $timestamp . '!')),
 );
+
+// Drupal (supposedly) requires a token in order to prevent Cross Site Request
+// Forgery.
 $tokenRetriever = new tokenRetriever($domain);
 $token = $tokenRetriever->getToken();
 
