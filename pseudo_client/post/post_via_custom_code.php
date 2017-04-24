@@ -20,6 +20,13 @@ if (isset($_GET['format'])) {
  ** specifies the serialization format of Drupal's response, not the format  **
  ** in which we will send the data. We MUST send the data in hal+json format.**
  **                                                                          **
+ ** The URI we use is determined by the Annotation in our resource,          **
+ ** specifically the link-relation/create entry.                             **
+ **  uri_paths = {                                                           **
+ **    "canonical" = "/wea/actions/{id}",                                    **
+ **    "https://www.drupal.org/link-relations/create" = "/wea/actions"       **
+ **  }                                                                       **
+ **                                                                          **
  ******************************************************************************/
 $rest_uri = 'http://' . $domain . '/wea/actions?_format=' . $format;
 $timestamp = date('F j, Y g:i a');
