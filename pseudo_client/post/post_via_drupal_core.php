@@ -123,6 +123,15 @@ class curlExecutor {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+
+/******************************************************************************
+ **                                                                          **
+ ** Look out! We are sending a clear text user:password combination. We'd    **
+ ** really want to:                                                          **
+ **   1) Pull our credentials from a protected file on the server            **
+ **   2) Use only sites that run secure http protocol (https://)             **
+ **                                                                          **
+ ******************************************************************************/
     curl_setopt($ch, CURLOPT_USERPWD, 'rest_user:rest_user');
     // We need to set the header at the end because PHP cURL sets it to
     // 'Content-type: application/x-www-form-urlencoded'
