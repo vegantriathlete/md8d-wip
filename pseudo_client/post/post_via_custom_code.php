@@ -18,7 +18,7 @@ if (isset($_GET['format'])) {
  **                                                                          **
  ** Note that we are appending the _format query argument. This argument     **
  ** specifies the serialization format of Drupal's response, not the format  **
- ** in which we will send the data. We MUST send the data in hal+json format.**
+ ** in which we will send the data.                                          **
  **                                                                          **
  ** The URI we use is determined by the Annotation in our resource,          **
  ** specifically the link-relation/create entry.                             **
