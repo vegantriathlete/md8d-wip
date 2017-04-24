@@ -13,6 +13,12 @@ $domain = $_GET['domain'];
  ** Serialization module how to serialize our response for us. We don't have **
  ** to worry about doing the serialization ourselves!                        **
  **                                                                          **
+ ** The URI we use is determined by the Annotation in our resource,          **
+ ** specifically the canonical entry.                                        **
+ **  uri_paths = {                                                           **
+ **    "canonical" = "/wea/actions",                                         **
+ **  }                                                                       **
+ **                                                                          **
  ******************************************************************************/
 $rest_uri = 'http://' . $domain . '/wea/actions?_format=json';
 
