@@ -178,12 +178,32 @@ class WEAResource extends ResourceBase {
     );
     try {
       $node->save();
+
+/******************************************************************************
+ **                                                                          **
+ ** This message will get logged to the watchdog database file if you are    **
+ ** using database logging (dblog) and to your system log file if you are    **
+ ** using system logging (syslog).                                           **
+ **                                                                          **
+ ******************************************************************************/
       $this->logger->notice('Created Water Eco Action with ID %id.', array('%id' => $node->id()));
 
       // 201 Created responses return the newly created node in the response
       // body. These responses are not cacheable, so we add no cacheability
       // metadata here.
       $url = $node->urlInfo('canonical', ['absolute' => TRUE])->toString(TRUE);
+
+/******************************************************************************
+ **                                                                          **
+ ** Our client doesn't dig into the cURL response to determine the value of  **
+ ** Location. If you use cURL from the command line you will see that the    **
+ ** response does, in fact, contain the Location: key.                       **
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://www.drupal.org/docs/8/core/modules/rest/3-post-for-creating-content-entities
+ ** for an example of how to use cURL from the command line to post data.    **
+ **                                                                          **
+ ******************************************************************************/
       $response = new ModifiedResourceResponse($node, 201, ['Location' => $url->getGeneratedUrl()]);
       return $response;
     }
