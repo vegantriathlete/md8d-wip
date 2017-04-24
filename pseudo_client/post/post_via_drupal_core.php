@@ -1,10 +1,31 @@
 <?php
 
-// Execute a cURL call
+/******************************************************************************
+ **                                                                          **
+ ** Remember to include the domain as a query argument!                      **
+ **                                                                          **
+ ******************************************************************************/
+$domain = $_GET['domain'];
+
+// See if a particular format was requested
+if (isset($_GET['format'])) {
+  $format = $_GET['format'];
+}  else {
+  $format = 'json';
+}
+
+/******************************************************************************
+ **                                                                          **
+ ** Note that we are appending the _format query argument. This argument     **
+ ** specifies the serialization format of Drupal's response, not the format  **
+ ** in which we will send the data. We MUST send the data in hal+json format.**
+ **                                                                          **
+ ******************************************************************************/
 
 // @see: https://www.drupal.org/docs/8/core/modules/rest/3-post-for-creating-content-entities
-//       As of Drupal 8.3.0 you may use /node instead of /entity/node.
-$rest_uri = 'http://testmd8ddev/entity/node?_format=hal_json';
+//       As of Drupal 8.3.0 you may use /node instead of /entity/node. It is
+//       still possible to use /entity/node until Drupal 9.0.
+$rest_uri = 'http://' . $domain . '/entity/node?_format=' . $format;
 $timestamp = date('F j, Y g:i a');
 // Drupal requires us to supply the '_links' key. The easiest way to figure out
 // how to build the links key is to first to a "GET" on the node type you wish
@@ -21,8 +42,10 @@ $post_fields = array(
   'langcode' => array(0 => array('value' => 'en')),
   'field_wea_description' => array(0 => array('value' => 'I successfully created this with a POST operation at ' . $timestamp . '!')),
 );
-$tokenRetriever = new tokenRetriever();
+$tokenRetriever = new tokenRetriever($domain);
 $token = $tokenRetriever->getToken();
+
+// Execute a cURL call
 $curlExecutor = new curlExecutor($rest_uri, $token, $post_fields);
 $result = $curlExecutor->postFields();
 $decoded_result = json_decode($result);
@@ -53,10 +76,16 @@ exit(0);
  * cURL Token Retriever
  */
 class tokenRetriever {
+  public $domain;
+  public $restURI;
+  public function __construct(string $domain) {
+    $this->domain = $domain;
+    $this->restURI = 'http://' . $domain . '/session/token';
+  }
   public function getToken() {
     // Setup the cURL request.
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, 'http://testmd8ddev/session/token');
+    curl_setopt($ch, CURLOPT_URL, $this->restURI);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $result = curl_exec($ch);
     // Report any errors
