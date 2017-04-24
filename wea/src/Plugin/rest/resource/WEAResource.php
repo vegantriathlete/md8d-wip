@@ -229,7 +229,9 @@ class WEAResource extends ResourceBase {
     if ($data == NULL) {
       throw new BadRequestHttpException('No data received.');
     }
+    // Are we able to successfully load a node with that ID?
     if ($node = Node::load($id)) {
+      // Is the client attempting to update a Water Eco Action item?
       if ($node->getType() != 'water_eco_action') {
         throw new BadRequestHttpException('You have not requested a Water Eco Action item.');
       }
@@ -243,6 +245,7 @@ class WEAResource extends ResourceBase {
       if (!$node->access('update')) {
         throw new AccessDeniedHttpException();
       }
+      // Is the client updating a particular translation?
       if (isset($data['language_code'])) {
         if ($node->hasTranslation($data['language_code'])) {
           $translated_node = $node->getTranslation($data['language_code']);
@@ -274,6 +277,14 @@ class WEAResource extends ResourceBase {
 
       try {
         $translated_node->save();
+
+/******************************************************************************
+ **                                                                          **
+ ** This message will get logged to the watchdog database file if you are    **
+ ** using database logging (dblog) and to your system log file if you are    **
+ ** using system logging (syslog).                                           **
+ **                                                                          **
+ ******************************************************************************/
         $this->logger->notice('Updated water eco action item with ID %id.', array('%id' => $id));
 
         // Return the updated node in the response body.
