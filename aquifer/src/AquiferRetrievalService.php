@@ -25,6 +25,13 @@ class AquiferRetrievalService implements AquiferRetrievalServiceInterface {
    * @param string $rest_endpoint
    *   The base REST endpoint to call
    */
+
+/******************************************************************************
+ **                                                                          **
+ ** Symfony knows to pass the $rest_endpoint to our constructor because we   **
+ ** specified it as an argument in our iai_aquifer.services.yml.             **
+ **                                                                          **
+ ******************************************************************************/
   public function __construct(string $rest_endpoint) {
     $this->restEndpoint = $rest_endpoint;
   }
@@ -84,7 +91,7 @@ class AquiferRetrievalService implements AquiferRetrievalServiceInterface {
  **                                                                          **
  ** If we were creating an actual service, then we'd query an endpoint to    **
  ** get the data. For the purpose of this example, we are expecting only     **
- ** possible aquifers.                                                       **
+ ** three possible aquifers.                                                 **
  **                                                                          **
  ******************************************************************************/
     $aquifer_data = array();

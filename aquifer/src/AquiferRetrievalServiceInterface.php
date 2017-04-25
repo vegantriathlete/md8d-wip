@@ -9,6 +9,19 @@ namespace Drupal\aquifer;
  * It is possible to find out about all known aquifers as well as to find out
  * details about a specific aquifer.
  */
+
+/******************************************************************************
+ **                                                                          **
+ ** We are pretending that there is some third-party service that we can     **
+ ** query to get information about all the aquifers in the world. Whether    **
+ ** the third-party service has URIs or a class that we can use to get the   **
+ ** data we want for our methods is not important. One of the benefits of    **
+ ** defining an interface is that it lays out the rules of what we want,     **
+ ** independent of what exists. The complexity of changing what exists into  **
+ ** what we want will be hidden inside of the class that implements the      **
+ ** interface.                                                               **
+ **                                                                          **
+ ******************************************************************************/
 interface AquiferRetrievalServiceInterface {
 
   /**
@@ -33,17 +46,20 @@ interface AquiferRetrievalServiceInterface {
    */
   public function getTotalAquifers($region = 'ALL');
 
+/******************************************************************************
+ **                                                                          **
+ ** We are pretending that aquifers have names that uniquely identify them.  **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * Get the names of aquifers
-   *
-   * We are pretending that aquifers have names that uniquely identify them.
    *
    * @param string $region
    *   Region to which to limit the search
    * @param integer $limit
    *   The number of results to return
    * @param integer $offset
-   *   The amount of results to skip passed
+   *   The amount of results to skip
    *
    * @return array
    *   The names of aquifers
