@@ -37,9 +37,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  ** will be rebuilt. We make use of this context in our build method with the**
  **   <code>$node = $this->getContextValue('node');</code>                   **
  **                                                                          **
- ** @see:                                                                    **
- ** https://api.drupal.org/api/drupal/core!lib!Drupal!Component!Plugin!ContextAwarePluginBase.php/function/ContextAwarePluginBase%3A%3AgetContextValue/8.2.x
- **                                                                          **
  ** This block is not intended to be an "all powerful" block to be reused    **
  ** elsewhere. We are making certain assumptions to keep the example         **
  ** relatively simple.                                                       **
@@ -119,6 +116,13 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
    */
   public function build() {
     $build = array();
+
+/******************************************************************************
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://api.drupal.org/api/drupal/core!lib!Drupal!Component!Plugin!ContextAwarePluginBase.php/function/ContextAwarePluginBase%3A%3AgetContextValue/8.2.x
+ **                                                                          **
+ ******************************************************************************/
     $node = $this->getContextValue('node');
 
     // Determine if we are on a page that points to a product.
