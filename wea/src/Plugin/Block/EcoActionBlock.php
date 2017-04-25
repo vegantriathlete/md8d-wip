@@ -115,9 +115,14 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function build() {
-    // We are just retrieving all of the eco actions. In a real situation we
-    // would do something like filtering the actions so that they were within a
-    // certain radius of the user.
+
+/******************************************************************************
+ **                                                                          **
+ ** We are just retrieving all of the eco actions. In a real situation we    **
+ ** would do something like filtering the actions so that they were within a **
+ ** certain radius of the user.                                              **
+ **                                                                          **
+ ******************************************************************************/
     $radius = $this->configuration['radius'];
     $ip = $this->personalizationIpService->getIpAddress();
     $coordinates = $this->personalizationIpService->mapIpAddress($ip);

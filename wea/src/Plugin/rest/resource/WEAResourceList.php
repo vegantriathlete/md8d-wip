@@ -96,9 +96,14 @@ class WEAResourceList extends ResourceBase {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function get() {
-    // We are just retrieving all of the water eco action items. In a real
-    // situation we might do something like inspecting query arguments to filter
-    // and sort them by some other criteria.
+
+/******************************************************************************
+ **                                                                          **
+ ** We are just retrieving all of the water eco action items. In a real      **
+ ** situation we might do something like inspecting query arguments to filter**
+ ** and sort them by some other criteria.                                    **
+ **                                                                          **
+ ******************************************************************************/
     $result = $this->nodeStorage->getQuery()
       ->condition('type', 'water_eco_action')
       ->condition('langcode', $this->currentLanguage->getId())
