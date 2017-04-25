@@ -7,10 +7,13 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 
-/**
- * @see: https://api.drupal.org/api/drupal/core%21core.api.php/group/hooks/8.3.x
- *       to learn more about Drupal's hook system.
- */
+/******************************************************************************
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://api.drupal.org/api/drupal/core%21core.api.php/group/hooks/8.3.x  **
+ ** to learn more about Drupal's hook system.                                **
+ **                                                                          **
+ ******************************************************************************/
 
 /**
  * Implements hook_help().
@@ -38,59 +41,88 @@ function aquifer_help($route_name, RouteMatchInterface $route_match) {
  * Queues aquifer updates once their refresh interval has elapsed.
  */
 function aquifer_cron() {
-  /**
-   * Note: If there were actually a service that tracked aquifers throughout the
-   *       world, there would likely be quite a large amount of data. This cron
-   *       job would have to be significantly more sophisticated in how it
-   *       queues items to be processed. In the case of this module, however,
-   *       I know that we've only got three aquifers defined. Knowing this,
-   *       I could actually choose to just process everything right here in
-   *       job. Instead, I want to illustrate how to use the queue and cron
-   *       queue workers.
-   */
 
-/**
- * @see: https://api.drupal.org/api/drupal/core%21lib%21Drupal.php/class/Drupal/8.3.x
- *       to learn more about Drupal's global class.
- */
+/******************************************************************************
+ **                                                                          **
+ ** If there were actually a service that tracked aquifers throughout the    **
+ ** world, there would likely be quite a large amount of data. This cron job **
+ ** would have to be significantly more sophisticated in how it queues items **
+ ** to be processed. In the case of this module, however, we know that we've **
+ ** only got three aquifers defined. Knowing this, we could actually choose  **
+ ** to just process everything right here in this hook. Instead, we want to  **
+ ** illustrate how to use the queue and cron queue workers.                  **
+ **                                                                          **
+ ******************************************************************************/
 
+/******************************************************************************
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://api.drupal.org/api/drupal/core%21lib%21Drupal.php/class/Drupal/8.3.x
+ ** to learn more about Drupal's global class.
+ **                                                                          **
+ ** @see: https://www.drupal.org/docs/8/api/state-api/overview               **
+ ** to learn more about Drupal's State API                                   **
+ **                                                                          **
+ ******************************************************************************/
   // Ensure that our cron job runs only once each day
   $last_run = \Drupal::state()->get('aquifer_update.last_run') ?: 0;
   if ((REQUEST_TIME - $last_run) < ( 24 * 60 * 60) ) {
     return;
   }
 
-/**
- * @see: https://api.drupal.org/api/drupal/core%21core.api.php/group/queue/8.3.x
- *       to learn more about Drupal's queue system.
- */
-
+/******************************************************************************
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://api.drupal.org/api/drupal/core%21core.api.php/group/queue/8.3.x  **
+ ** to learn more about Drupal's queue system.                               **
+ **                                                                          **
+ ******************************************************************************/
   $queue = \Drupal::queue('aquifer_updates');
 
-  // We must access the service via the static method that the global
-  // Drupal object provides, since we are forced to write procedural code
-  // inside of a hook.
+/******************************************************************************
+ **                                                                          **
+ ** We must access the service via the static method that the global Drupal  **
+ ** object provides, since we are forced to write procedural code inside of  **
+ ** a hook.                                                                  **
+ **                                                                          **
+ ******************************************************************************/
   $aquifer_retrieval_service = \Drupal::service('aquifer.aquifer_retrieval_service');
 
-  // We are just retrieving all the aquifer names. In reality, the service
-  // would likely have some timestamp to let us know when aquifers have been
-  // updated; we would request aquifers updated since a certain time, as well as
-  // use some other filters to narrow down our results.
+/******************************************************************************
+ **                                                                          **
+ ** We are just retrieving all the aquifer names. In reality, the service    **
+ ** would likely have some timestamp to let us know when aquifers have been  **
+ ** updated; we would request aquifers updated since a certain time, as well **
+ ** as use some other filters to narrow down our results.                    **
+ **                                                                          **
+ ******************************************************************************/
   $aquifer_names = $aquifer_retrieval_service->getAquiferNames();
 
+/******************************************************************************
+ **                                                                          **
+ ** In our situation we are always updating all of the aquifers. But, in a   **
+ ** real situation we'd only be updating some of them. So, we might want to  **
+ ** leave the rest in the queue.                                             **
+ **                                                                          **
+ ******************************************************************************/
   // Delete any queued updates for which we have a new update.
-  // Note: In our situation we are always updating all of the aquifers. But,
-  //       in a real situation we'd only be updating some of them. So, we might
-  //       want to leave the rest in the queue.
   aquifer_delete_queued_updates($queue, $aquifer_names);
 
   foreach ($aquifer_names as $aquifer_name) {
     $aquifer_data = $aquifer_retrieval_service->getAquiferData($aquifer_name);
     $aquifer_data = array_merge(array('name' => $aquifer_name), $aquifer_data);
+
+/******************************************************************************
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Queue%21QueueInterface.php/function/QueueInterface%3A%3AcreateItem/8.3.x
+ ** for more information on create queue items.                              **
+ **                                                                          **
+ ******************************************************************************/
     $queue->createItem($aquifer_data);
   }
 
-  // We update the state storage system to indicate when this cron job ran.
+  // Update the state storage system to indicate when this cron job ran.
   \Drupal::state()->set('aquifer_update.last_run', REQUEST_TIME);
 }
 
@@ -104,8 +136,25 @@ function aquifer_cron() {
  */
 function aquifer_delete_queued_updates($queue, $delete_list) {
 
+/******************************************************************************
+ **                                                                          **
+ ** Since we are manually claiming queue items we are also responsible for   **
+ ** either deleting or releasing them.                                       **
+ ** @see:                                                                    **
+ ** https://api.drupal.org/api/drupal/core%21core.api.php/group/queue/8.3.x  **
+ ** for more information.                                                    **
+ **                                                                          **
+ ******************************************************************************/
+
   // Retrieve any updates that are still waiting in the queue.
   while ($item = $queue->claimItem()) {
+/******************************************************************************
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Queue%21QueueInterface.php/function/QueueInterface%3A%3AclaimItem/8.3.x
+ ** for more information about the structure of queue items.                 **  
+ **                                                                          **
+ ******************************************************************************/
     if (in_array($item->data->name, $delete_list)) {
       $queue->deleteItem($item);
     }

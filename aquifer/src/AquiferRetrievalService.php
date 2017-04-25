@@ -4,11 +4,14 @@ namespace Drupal\aquifer;
 
 /**
  * An implementation of AquiferRetrievalServiceInterface.
- *
- * This is just a mocked up service. It doesn't actually use any external
- * service. However, we are accepting a REST endpoint as an argument to the
- * constructor just to illustrate its use.
  */
+
+/******************************************************************************
+ **                                                                          **
+ ** This is just a mocked up service. It doesn't actually use any external   **
+ ** service.                                                                 **
+ **                                                                          **
+ ******************************************************************************/
 class AquiferRetrievalService implements AquiferRetrievalServiceInterface {
 
   /**
@@ -37,13 +40,15 @@ class AquiferRetrievalService implements AquiferRetrievalServiceInterface {
    * {@inheritdoc}
    */
   public function getTotalAquifers($region = 'ALL') {
-    /**
-     * We aren't really going to pay attention to the arguments. If we were
-     * creating an actual service, then we'd query some endpoint and use the
-     * arguments to help refine our query. For the purpose of this example, we
-     * are just going to return the same hard-coded value every time.
-     */
 
+/******************************************************************************
+ **                                                                          **
+ ** We aren't really going to pay attention to the arguments. If we were     **
+ ** creating an actual service, then we'd query some endpoint and use the    **
+ ** arguments to help refine our query. For the purpose of this example, we  **
+ ** are just going to return the same hard-coded value every time.           **
+ **                                                                          **
+ ******************************************************************************/
     return 100;
   }
 
@@ -53,12 +58,14 @@ class AquiferRetrievalService implements AquiferRetrievalServiceInterface {
   public function getAquiferNames($region = 'ALL', $limit = -1, $offset = 0) {
     $aquifer_names = array();
 
-    /**
-     * We aren't really going to pay attention to the arguments. If we were
-     * creating an actual service, then we'd query some endpoint and use the
-     * arguments to help refine our query. For the purpose of this example, we
-     * are just going to return the same hard-coded array every time.
-     */
+/******************************************************************************
+ **                                                                          **
+ ** We aren't really going to pay attention to the arguments. If we were     **
+ ** creating an actual service, then we'd query some endpoint and use the    **
+ ** arguments to help refine our query. For the purpose of this example, we  **
+ ** are just going to return the same hard-coded value every time.           **
+ **                                                                          **
+ ******************************************************************************/
     $aquifer_names = array(
       'bigBlue',
       'deepOcean',
@@ -72,6 +79,14 @@ class AquiferRetrievalService implements AquiferRetrievalServiceInterface {
    * {@inheritdoc}
    */
   public function getAquiferData($name = NULL) {
+
+/******************************************************************************
+ **                                                                          **
+ ** If we were creating an actual service, then we'd query an endpoint to    **
+ ** get the data. For the purpose of this example, we are expecting only     **
+ ** possible aquifers.                                                       **
+ **                                                                          **
+ ******************************************************************************/
     $aquifer_data = array();
     switch ($name) {
       case 'bigBlue':

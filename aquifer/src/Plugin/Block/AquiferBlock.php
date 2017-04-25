@@ -35,19 +35,26 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
-   *   Entity storage for node entities.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    // Note: We could have just as easily passed the EntityStorageInterface
-    //       directly by injecting the node storage object like:
-    //       $container->get('entity_type.manager')->getStorage('node').
-    //       Had we gone this route, then we would need to use (above)
-    //       Drupal\Core\Entity\EntityStorageInterface instead of
-    //       Drupal\Core\Entity\EntityTypeManagerInterface and we would also
-    //       need to change our typehinting to use EntityStorageInterface
-    //       instead of EntityTypeManagerInterface.
+/******************************************************************************
+ **                                                                          **
+ ** We could have just as easily passed the EntityStorageInterface directly  **
+ ** by injecting the node storage object like:                               **
+ **   <code>$container->get('entity_type.manager')->getStorage('node')</code>**
+ ** Had we gone this route, then we would need to use (above)                **
+ **   Drupal\Core\Entity\EntityStorageInterface                              **
+ ** instead of                                                               **
+ **   Drupal\Core\Entity\EntityTypeManagerInterface                          **
+ ** and we would also need to change our typehinting to use                  **
+ **   EntityStorageInterface                                                 **
+ ** instead of                                                               **
+ **   EntityTypeManagerInterface                                             **
+ **                                                                          **
+ ******************************************************************************/
     $this->nodeStorage = $entity_type_manager->getStorage('node');
   }
 
@@ -98,9 +105,14 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
    * {@inheritdoc}
    */
   public function build() {
-    // We are just retrieving all of the aquifers. In a real situation we might
-    // do something like choosing the aquifers that were at a critical level
-    // or filter and sort them by some other criteria.
+ 
+/******************************************************************************
+ **                                                                          **
+ ** We are just retrieving all of the aquifers. In a real situation we might **
+ ** do something like choosing the aquifers that were at a critical level or **
+ ** filter and sort them by some other criteria.                             **
+ **                                                                          **
+ ******************************************************************************/
     $result = $this->nodeStorage->getQuery()
       ->condition('type', 'aquifer')
       ->condition('status', 1)
@@ -122,10 +134,15 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
           '#markup' => $item->label(),
         ];
       }
-      // We don't really need to worry about expiring the cache because we've
-      // got only three aquifers. But, we are going to set the meta data so
-      // that when pieces of content are updated we make sure to rebuild this
-      // block. You can learn more about the Cache API in the Appendix.
+
+/******************************************************************************
+ **                                                                          **
+ ** We don't really need to worry about expiring the cache because we've got **
+ ** only three aquifers. But, we are going to set the meta data so that when **
+ ** pieces of content are updated we make sure to rebuild this block.        **
+ ** You can learn more about the Cache API in the Appendix.                  **
+ **                                                                          **
+ ******************************************************************************/
       $build['#cache']['tags'][] = 'node_list';
       return $build;
     }

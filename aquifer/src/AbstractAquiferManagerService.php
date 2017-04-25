@@ -4,13 +4,18 @@ namespace Drupal\aquifer;
 
 /**
  * Defines an abstract class for the Aquifer Manager Service.
- *
- * I needed to create this abstract class because I want the createAquifer
- * method to be protected; I can't define a protected method in an interface.
- * Truth be told, I'd really like the method to be private so that it can be
- * called only within the class. But, then I'd have to put it only in the
- * AquiferManagerService class itself; I can't make an abstract method private.
  */
+
+/******************************************************************************
+ **                                                                          **
+ ** We created this abstract class because we want the createAquifer method  **
+ ** to be protected; we can't define a protected method in an interface.     **
+ ** Truth be told, we'd really like the method to be private so that it can  **
+ ** be called only within the class. But, then we'd have to put it only in   **
+ ** the AquiferManagerService class itself; we can't make an abstract method **
+ ** private.                                                                 **
+ **                                                                          **
+ ******************************************************************************/
 abstract class AbstractAquiferManagerService {
 
   /**
