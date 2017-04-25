@@ -27,22 +27,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     )
  *   }
  * )
- *
- * We are controlling the block caching by setting the context key above.
- * Whenever a node is saved it invalidates its cache context and the block
- * will be rebuilt. We make use of this context in our build method with the
- * code: <code>$node = $this->getContextValue('node');</code>
- *
- * Also, the context ensures that the block is present only on node pages.
- *
- * @see: http://drupal.stackexchange.com/questions/199527/how-do-i-correctly-setup-caching-for-my-custom-block-showing-content-depending-o
- * @see: http://drupal.stackexchange.com/questions/180907/how-do-i-make-a-block-that-pulls-the-current-node-content
- * @see: https://api.drupal.org/api/drupal/core!lib!Drupal!Component!Plugin!ContextAwarePluginBase.php/function/ContextAwarePluginBase%3A%3AgetContextValue/8.2.x
- *
- * Note: This block is not intended to be an "all powerful" block to be reused
- *       elsewhere. We are making certain assumptions to keep the example
- *       relatively simple.
  */
+
+/******************************************************************************
+ **                                                                          **
+ ** The context ensures that the block is present only on node pages.        **
+ **                                                                          **
+ ** Whenever a node is saved it invalidates its cache context and the block  **
+ ** will be rebuilt. We make use of this context in our build method with the**
+ **   <code>$node = $this->getContextValue('node');</code>                   **
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://api.drupal.org/api/drupal/core!lib!Drupal!Component!Plugin!ContextAwarePluginBase.php/function/ContextAwarePluginBase%3A%3AgetContextValue/8.2.x
+ **                                                                          **
+ ** This block is not intended to be an "all powerful" block to be reused    **
+ ** elsewhere. We are making certain assumptions to keep the example         **
+ ** relatively simple.                                                       **
+ **                                                                          **
+ ******************************************************************************/
 class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -133,9 +135,13 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
         '#items' => [],
       ];
 
-      // This logic is just to give some positive feedback that the block is
-      // being rendered. In reality, we'd likely just not have the block render
-      // anything in this situation.
+/******************************************************************************
+ **                                                                          **
+ ** This logic is just to give some positive feedback that the block is being**
+ ** rendered. In reality, we'd likely just not have the block render anything**
+ ** in this situation.                                                       **
+ **                                                                          **
+ ******************************************************************************/
       $build['list']['#items'][0] = [
         '#type' => 'markup',
         '#markup' => $this->t('There were no product images to display.')
@@ -149,7 +155,13 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
           '#style_name' => 'product_thumbnail',
           '#alt' => $image_data[$item_count]['alt'],
         ];
-        // @see: https://www.drupal.org/node/2488192
+
+/******************************************************************************
+ **                                                                          **
+ ** This is the Modal API.                                                   **
+ ** @see: https://www.drupal.org/node/2488192 for more information.          **
+ **                                                                          **
+ ******************************************************************************/
         $options = array(
           'attributes' => array(
             'class' => array(
@@ -173,9 +185,14 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
       $build['#attached']['library'][] = 'core/drupal.dialog.ajax';
     }
     else {
-      // This logic is just to give some positive feedback that the block is
-      // being rendered. In reality, we'd likely just not have the block render
-      // anything in this situation.
+
+/******************************************************************************
+ **                                                                          **
+ ** This logic is just to give some positive feedback that the block is being**
+ ** rendered. In reality, we'd likely just not have the block render anything**
+ ** in this situation.                                                       **
+ **                                                                          **
+ ******************************************************************************/
       $build['no_data'] = [
         '#type' => 'markup',
         '#markup' => $this->t('This page does not reference a product.'),
@@ -185,13 +202,24 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
     return $build;
   }
 
+  /**
+   * Get a product
+   *
+   * @param \Drupal\node\Entity\Node $node
+   *   The fully loaded node object.
+   * @return \Drupal\node\Entity\Node $product
+   *   The fully loaded product
+   */
   private function getProduct(Node $node) {
-    // Note: For this example block we are concerned only with nodes.
-    //       Specifically, we are operating under the assumption that this block
-    //       should render only when it's being viewed on a Book page that
-    //       references a Product or when it's being viewed directly on a
-    //       Product page.
 
+/******************************************************************************
+ **                                                                          **
+ ** For this example block we are concerned only with nodes. Specifically, we**
+ ** are operating under the assumption that this block should render only    **
+ ** when it's being viewed on a Book page that references a Product or when  **
+ ** it's being viewed directly on a Product page.                            **
+ **                                                                          **
+ ******************************************************************************/
     if ($node) {
       // Check if this is a Product node already
       if ($node->getType() == 'product') {
@@ -208,14 +236,30 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
     }
   }
 
+  /**
+   * Get a referenced product
+   *
+   * @param \Drupal\node\Entity\Node $node
+   *   The fully loaded node object.
+   * @return \Drupal\node\Entity\Node $product
+   *   The fully loaded referenced product
+   */
   private function getReferencedProduct($node) {
-    // Note: We are making an assumption about a particular field name that
-    //       Book pages use for the entity reference to products. We added this
-    //       field to the book pages ourselves.
+
+/******************************************************************************
+ **                                                                          **
+ ** We are making an assumption about a particular field name that Book pages**
+ ** use for the entity reference to products. We added this field to the book**
+ **  pages ourselves.                                                        **
+ **                                                                          **
+ ******************************************************************************/
     if (isset($node->field_product)) {
+      // @todo: Determine if we've got a bug with not using the translated
+      //        node, which results in the referenced entities being
+      //        incorrect. I'm not sure if it's our bug or Drupal's bug.
       $referenced_entities = $node->field_product->referencedEntities();
-      $node = $referenced_entities[0];
-      return $node;
+      $product = $referenced_entities[0];
+      return $product;
     }
     else {
       return NULL;

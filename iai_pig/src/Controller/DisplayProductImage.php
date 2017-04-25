@@ -18,13 +18,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class DisplayProductImage extends ControllerBase {
 
-  /**
-   * In order to display a Modal, there needs to be a URL that will be
-   * displayed inside the modal. At least, I think this is the case.
-   *
-   * This controller is responsible for providing that URL that will be
-   * displayed inside the modal.
-   */
+/******************************************************************************
+ **                                                                          **
+ ** In order to display a Modal, there needs to be a URL that will be        **
+ ** displayed inside the modal.                                              **
+ **                                                                          **
+ ** This controller is responsible for providing the URL that will be        **
+ ** displayed inside the modal.                                              **
+ **                                                                          **
+ ******************************************************************************/
 
   /**
    * Presentation Manager Service.
