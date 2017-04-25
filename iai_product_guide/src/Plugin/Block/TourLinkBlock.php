@@ -24,6 +24,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
+
+/******************************************************************************
+ **                                                                          **
+ ** The context ensures that the block is present only on node pages.        **
+ **                                                                          **
+ ** Whenever a node is saved it invalidates its cache context and the block  **
+ ** will be rebuilt. We make use of this context in our build method with the**
+ **   <code>$node = $this->getContextValue('node');</code>                   **
+ **                                                                          **
+ ******************************************************************************/
 class TourLinkBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -65,6 +75,13 @@ class TourLinkBlock extends BlockBase implements ContainerFactoryPluginInterface
    * {@inheritdoc}
    */
   public function build() {
+
+/******************************************************************************
+ **                                                                          **
+ ** @see:                                                                    **
+ ** https://api.drupal.org/api/drupal/core!lib!Drupal!Component!Plugin!ContextAwarePluginBase.php/function/ContextAwarePluginBase%3A%3AgetContextValue/8.2.x
+ **                                                                          **
+ ******************************************************************************/
     $node = $this->getContextValue('node');
     if ($this->currentUser->hasPermission('access tour') && $node->getType() == 'book') {
       $url = Url::fromRoute('<current>', array(), array('query' => array('tour' => 1)));
