@@ -62,6 +62,13 @@ class DisplayProductImage extends ControllerBase {
    *   The render array
    */
   public function displayProductImage(Node $node, $delta) {
+
+/******************************************************************************
+ **                                                                          **
+ ** Because we are using the Node type hint, we will receive a fully loaded  **
+ ** node object. Drupal passes us the node object in the right language.     **
+ **                                                                          **
+ ******************************************************************************/
     $productImages = $this->productManagerService->retrieveProductImages($node);
     if (isset($productImages[$delta])) {
       $file = File::load($productImages[$delta]['target_id']);

@@ -123,6 +123,10 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
  ** https://api.drupal.org/api/drupal/core!lib!Drupal!Component!Plugin!ContextAwarePluginBase.php/function/ContextAwarePluginBase%3A%3AgetContextValue/8.2.x
  **                                                                          **
  ******************************************************************************/
+    // @todo: I think I need to change this to the translated node after I
+    //        receive it. See related todo below. When I'm on the book page
+    //        things get messed up with the spanish version. When I'm on the
+    //        product page it works fine with the spanish version.
     $node = $this->getContextValue('node');
 
     // Determine if we are on a page that points to a product.
