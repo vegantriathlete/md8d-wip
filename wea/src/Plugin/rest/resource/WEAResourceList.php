@@ -31,6 +31,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class WEAResourceList extends ResourceBase {
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an object, not just a language code.                             **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * The currently selected language.
    *
@@ -173,5 +178,4 @@ class WEAResourceList extends ResourceBase {
     throw new NotFoundHttpException(t('No water eco action items were found.'));
 
   }
-
 }

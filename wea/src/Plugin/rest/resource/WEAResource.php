@@ -38,6 +38,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class WEAResource extends ResourceBase {
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an object, not just a language code.                             **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * The currently selected language.
    *
@@ -150,12 +155,25 @@ class WEAResource extends ResourceBase {
       }
     }
 
+/******************************************************************************
+ **                                                                          **
+ ** We don't need to worry about how to serialize our data. Drupal will take **
+ ** care of that for us!                                                     **
+ **                                                                          **
+ ******************************************************************************/
     if (!empty($record)) {
       $response = new ResourceResponse($record, 200);
       $response->addCacheableDependency($record);
       return $response;
     }
 
+/******************************************************************************
+ **                                                                          **
+ ** We need to make sure that our method returns something, even if that is  **
+ ** an exception that we throw. Drupal will turn the exception into a        **
+ ** response.                                                                **
+ **                                                                          **
+ ******************************************************************************/
     throw new NotFoundHttpException(t('Water eco action item with ID @id was not found', array('@id' => $id)));
   }
 
@@ -222,11 +240,22 @@ class WEAResource extends ResourceBase {
  ** https://www.drupal.org/docs/8/core/modules/rest/3-post-for-creating-content-entities
  ** for an example of how to use cURL from the command line to post data.    **
  **                                                                          **
+ ** We don't need to worry about how to serialize our data. Drupal will take **
+ ** care of that for us!                                                     **
+ **                                                                          **
  ******************************************************************************/
       $response = new ModifiedResourceResponse($node, 201, ['Location' => $url->getGeneratedUrl()]);
       return $response;
     }
     catch (EntityStorageException $e) {
+
+/******************************************************************************
+ **                                                                          **
+ ** We need to make sure that our method returns something, even if that is  **
+ ** an exception that we throw. Drupal will turn the exception into a        **
+ ** response.                                                                **
+ **                                                                          **
+ ******************************************************************************/
       throw new HttpException(500, 'Internal Server Error', $e);
     }
   }
@@ -306,10 +335,24 @@ class WEAResource extends ResourceBase {
  ******************************************************************************/
         $this->logger->notice('Updated water eco action item with ID %id.', array('%id' => $id));
 
+/******************************************************************************
+ **                                                                          **
+ ** We don't need to worry about how to serialize our data. Drupal will take **
+ ** care of that for us!                                                     **
+ **                                                                          **
+ ******************************************************************************/
         // Return the updated node in the response body.
         return new ModifiedResourceResponse($translated_node, 200);
       }
       catch (EntityStorageException $e) {
+
+/******************************************************************************
+ **                                                                          **
+ ** We need to make sure that our method returns something, even if that is  **
+ ** an exception that we throw. Drupal will turn the exception into a        **
+ ** response.                                                                **
+ **                                                                          **
+ ******************************************************************************/
         throw new HttpException(500, 'Internal Server Error', $e);
       }
     }
@@ -328,6 +371,15 @@ class WEAResource extends ResourceBase {
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
   public function delete($id) {
+
+/******************************************************************************
+ **                                                                          **
+ ** We must return some type of response, even if it is an exception. There  **
+ ** are many opportunities to throw exceptions in this method. Drupal will   **
+ ** turn the exception into an HTTP response.                                **
+ **                                                                          **
+ ******************************************************************************/
+
     if ($node = Node::load($id)) {
       if ($node->getType() != 'water_eco_action') {
         throw new BadRequestHttpException('You have not requested a Water Eco Action item.');
