@@ -19,18 +19,23 @@ if (isset($_GET['format'])) {
  ** Note that we are appending the _format query argument. This argument     **
  ** specifies the serialization format of Drupal's response, not the format  **
  ** in which we will send the data. We MUST send the data in hal+json format.**
+ ** @see:
+ ** https://www.drupal.org/docs/8/core/modules/rest/3-post-for-creating-content-entities
+ ** As of Drupal 8.3.0 you may use /node instead of /entity/node. It is still**
+ ** possible to use /entity/node until Drupal 9.0.                           **
  **                                                                          **
  ******************************************************************************/
-
-// @see: https://www.drupal.org/docs/8/core/modules/rest/3-post-for-creating-content-entities
-//       As of Drupal 8.3.0 you may use /node instead of /entity/node. It is
-//       still possible to use /entity/node until Drupal 9.0.
 $rest_uri = 'http://' . $domain . '/entity/node?_format=' . $format;
 $timestamp = date('F j, Y g:i a');
-// Drupal requires us to supply the '_links' key. The easiest way to figure out
-// how to build the links key is to first to a "GET" on the node type you wish
-// to build and examine the response. Doing this also helps you figure out how
-// to build the rest of the data.
+
+/******************************************************************************
+ **                                                                          **
+ ** Drupal requires us to supply the '_links' key. The easiest way to figure **
+ ** out how to build the links key is to first to a "GET" on the node type   **
+ ** you wish to build and examine the response. Doing this also helps you    **
+ ** figure out how to build the rest of the data.                            **
+ **                                                                          **
+ ******************************************************************************/
 $post_fields = array(
   '_links' => array(
     'type' => array(
@@ -43,8 +48,12 @@ $post_fields = array(
   'field_wea_description' => array(0 => array('value' => 'I successfully created this with a POST operation at ' . $timestamp . '!')),
 );
 
-// Drupal (supposedly) requires a token in order to prevent Cross Site Request
-// Forgery.
+/******************************************************************************
+ **                                                                          **
+ ** Drupal (supposedly) requires a token in order to prevent Cross Site      **
+ ** Request Forgery.                                                         **
+ **                                                                          **
+ ******************************************************************************/
 $tokenRetriever = new tokenRetriever($domain);
 $token = $tokenRetriever->getToken();
 

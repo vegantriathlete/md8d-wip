@@ -32,8 +32,12 @@ if (isset($_GET['format'])) {
  ******************************************************************************/
 $rest_uri = 'http://' . $domain . '/wea/actions/' . $item . '?_format=' . $format;
 
-// Drupal (supposedly) requires a token in order to prevent Cross Site Request
-// Forgery.
+/******************************************************************************
+ **                                                                          **
+ ** Drupal (supposedly) requires a token in order to prevent Cross Site      **
+ ** Request Forgery.                                                         **
+ **                                                                          **
+ ******************************************************************************/
 $tokenRetriever = new tokenRetriever($domain);
 $token = $tokenRetriever->getToken();
 

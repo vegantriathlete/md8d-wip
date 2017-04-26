@@ -42,8 +42,12 @@ $post_fields = array(
   'description' => 'I successfully created this with a POST operation at ' . $timestamp . '! And I did it with my custom REST URI, to boot.',
 );
 
-// Drupal (supposedly) requires a token in order to prevent Cross Site Request
-// Forgery.
+/******************************************************************************
+ **                                                                          **
+ ** Drupal (supposedly) requires a token in order to prevent Cross Site      **
+ ** Request Forgery.                                                         **
+ **                                                                          **
+ ******************************************************************************/
 $tokenRetriever = new tokenRetriever($domain);
 $token = $tokenRetriever->getToken();
 

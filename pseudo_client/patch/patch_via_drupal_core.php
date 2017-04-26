@@ -25,16 +25,15 @@ if (isset($_GET['format'])) {
  ******************************************************************************/
 $rest_uri = 'http://' . $domain . '/node/' . $item . '?_format=' . $format;
 $timestamp = date('F j, Y g:i a');
-// Drupal requires us to supply the '_links' key. The easiest way to figure out
-// how to build the links key is to first to a "GET" on the node type you wish
-// to build and examine the response. Doing this also helps you figure out how
-// to build the rest of the data.
 
 /******************************************************************************
  **                                                                          **
- ** We still need to use the _links => type combination with a PATCH. Then   **
- ** we specify only the fields we want to update. Drupal will leave the      **
- ** remaining fields unchanged.                                              **
+ ** We need to use the _links => type combination with a PATCH. The easiest  **
+ ** way to figure out how to build the links key is to first to a "GET" on   **
+ ** the node type you wish to build and examine the response. Doing this also**
+ ** helps you figure out how to build the rest of the data. We specify only  **
+ ** the fields we want to update. Drupal will leave the remaining fields     **
+ ** unchanged.                                                               **
  **                                                                          **
  ******************************************************************************/
 $post_fields = array(
@@ -47,8 +46,12 @@ $post_fields = array(
   'field_wea_description' => array(0 => array('value' => 'I successfully updated this with a PATCH operation at ' . $timestamp . '!')),
 );
 
-// Drupal (supposedly) requires a token in order to prevent Cross Site Request
-// Forgery.
+/******************************************************************************
+ **                                                                          **
+ ** Drupal (supposedly) requires a token in order to prevent Cross Site      **
+ ** Request Forgery.                                                         **
+ **                                                                          **
+ ******************************************************************************/
 $tokenRetriever = new tokenRetriever($domain);
 $token = $tokenRetriever->getToken();
 
