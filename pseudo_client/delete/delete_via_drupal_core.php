@@ -33,7 +33,11 @@ $token = $tokenRetriever->getToken();
 // Execute a cURL call
 $curlExecutor = new curlExecutor($rest_uri, $token);
 $result = $curlExecutor->deleteContent();
-$decoded_result = json_decode($result);
+if ($format == 'xml') {
+  $decoded_results = new SimpleXMLElement($results);
+} else {
+  $decoded_results = json_decode($results);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

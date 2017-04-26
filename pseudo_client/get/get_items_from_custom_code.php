@@ -25,7 +25,11 @@ $rest_uri = 'http://' . $domain . '/wea/actions?_format=json';
 // Execute a cURL call
 $curlExecutor = new curlExecutor($rest_uri);
 $results = $curlExecutor->getRecords();
-$decoded_results = json_decode($results);
+if ($format == 'xml') {
+  $decoded_results = new SimpleXMLElement($results);
+} else {
+  $decoded_results = json_decode($results);
+}
 
 /******************************************************************************
  **                                                                          **
