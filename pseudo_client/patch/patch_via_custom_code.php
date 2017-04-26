@@ -57,6 +57,13 @@ if ($format == 'xml') {
 } else {
   $decoded_results = json_decode($results);
 }
+
+/******************************************************************************
+ **                                                                          **
+ ** We are going to display the results of our cURL request as a simple      **
+ ** HTML page.                                                               **
+ **                                                                          **
+ ******************************************************************************/
 ?>
 <!DOCTYPE html>
 <html lang="en">
