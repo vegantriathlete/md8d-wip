@@ -14,6 +14,12 @@ class PersonalizationIpService implements PersonalizationIpServiceInterface {
    */
   protected $request;
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an example of Dependency Injection. The $request_stack is being  **
+ ** injected through the class's constructor.                                **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * Constructs a new Request.
    *
@@ -23,6 +29,9 @@ class PersonalizationIpService implements PersonalizationIpServiceInterface {
   public function __construct(RequestStack $request_stack) {
 
 /******************************************************************************
+ **                                                                          **
+ ** Symfony knows to pass the $request_stack to our constructor because we   **
+ ** specified it as an argument in our iai_personalization.services.yml.     **
  **                                                                          **
  ** You can learn more about Symfony's Request object by looking at          **
  ** vendor/symfony/http-foundation/Request.php                               **
