@@ -9,6 +9,15 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/******************************************************************************
+ **                                                                          **
+ ** The context ensures that the block is present only on node pages.        **
+ **                                                                          **
+ ** Whenever a node is saved it invalidates its cache context and the block  **
+ ** will be rebuilt. We make use of this context in our build method with the**
+ **   <code>$node = $this->getContextValue('node');</code>                   **
+ **                                                                          **
+ ******************************************************************************/
 /**
  * Provides a block with a link to start the tour.
  *
@@ -24,16 +33,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-
-/******************************************************************************
- **                                                                          **
- ** The context ensures that the block is present only on node pages.        **
- **                                                                          **
- ** Whenever a node is saved it invalidates its cache context and the block  **
- ** will be rebuilt. We make use of this context in our build method with the**
- **   <code>$node = $this->getContextValue('node');</code>                   **
- **                                                                          **
- ******************************************************************************/
 class TourLinkBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -43,6 +42,12 @@ class TourLinkBlock extends BlockBase implements ContainerFactoryPluginInterface
    */
   protected $currentUser;
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an example of Dependency Injection. The necessary objects are    **
+ ** being injected through the class's constructor.                          **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * Constructs an TourLinkBlock object.
    *
@@ -58,11 +63,28 @@ class TourLinkBlock extends BlockBase implements ContainerFactoryPluginInterface
     $this->currentUser = $current_user;
   }
 
-
+/******************************************************************************
+ **                                                                          **
+ ** To learn more about Symfony's service container visit:                   **
+ **   http://symfony.com/doc/current/service_container.html                  **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+
+/******************************************************************************
+ **                                                                          **
+ ** The ContainerFactoryPluginInterface is what gave us access to Symfony's  **
+ ** service container. Plugins don't get access to the service container if  **
+ ** they don't implement the ContainerFactoryPluginInterface.                **
+ **                                                                          **
+ ** If we plan to do anything in our constructor we need to call the parent  **
+ ** constructor explicitly. Therefore, we need to ensure we've got all the   **
+ ** necessary objects to pass to our parent.                                 **
+ **                                                                          **
+ ******************************************************************************/
     return new static(
       $configuration,
       $plugin_id,

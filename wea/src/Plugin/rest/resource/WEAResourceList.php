@@ -18,7 +18,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  ** uri_paths.                                                               **
  **                                                                          **
  ******************************************************************************/
-
 /**
  * Provides a resource to list water eco action items.
  *
@@ -46,6 +45,12 @@ class WEAResourceList extends ResourceBase {
    */
   protected $nodeStorage;
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an example of Dependency Injection. The necessary objects are    **
+ ** being injected through the class's constructor.                          **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * Constructs a Drupal\wea\Plugin\rest\resource\WEAResourceList object.
    *
@@ -70,10 +75,24 @@ class WEAResourceList extends ResourceBase {
     $this->nodeStorage = $entity_type_manager->getStorage('node');
   }
 
+/******************************************************************************
+ **                                                                          **
+ ** To learn more about Symfony's service container visit:                   **
+ **   http://symfony.com/doc/current/service_container.html                  **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+
+/******************************************************************************
+ **                                                                          **
+ ** If we plan to do anything in our constructor we need to call the parent  **
+ ** constructor explicitly. Therefore, we need to ensure we've got all the   **
+ ** necessary objects to pass to our parent.                                 **
+ **                                                                          **
+ ******************************************************************************/
     return new static(
       $configuration,
       $plugin_id,

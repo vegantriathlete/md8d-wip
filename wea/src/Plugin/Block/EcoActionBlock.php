@@ -62,7 +62,12 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
     $this->personalizationIpService = $personalization_ip_service;
   }
 
-
+/******************************************************************************
+ **                                                                          **
+ ** To learn more about Symfony's service container visit:                   **
+ **   http://symfony.com/doc/current/service_container.html                  **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * {@inheritdoc}
    */
@@ -74,6 +79,10 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
  ** service container. Plugins don't get access to the service container if  **
  ** they don't implement the ContainerFactoryPluginInterface.                **
  **                                                                          **
+ ** If we plan to do anything in our constructor we need to call the parent  **
+ ** constructor explicitly. Therefore, we need to ensure we've got all the   **
+ ** necessary objects to pass to our parent.                                 **
+ **                                                                          **
  ******************************************************************************/
     return new static(
       $configuration,
@@ -83,7 +92,6 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $container->get('personalization.personalization_ip_service')
     );
   }
-
 
   /**
    * {@inheritdoc}

@@ -27,6 +27,12 @@ class DisplayAquifers extends ControllerBase {
    */
   protected $aquiferRetrievalService;
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an example of Dependency Injection. The necessary objects are    **
+ ** being injected through the class's constructor.                          **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * {@inheritdoc}
    */
@@ -34,6 +40,12 @@ class DisplayAquifers extends ControllerBase {
     $this->aquiferRetrievalService = $aquiferRetrievalService;
   }
 
+/******************************************************************************
+ **                                                                          **
+ ** To learn more about Symfony's service container visit:                   **
+ **   http://symfony.com/doc/current/service_container.html                  **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * {@inheritdoc}
    */

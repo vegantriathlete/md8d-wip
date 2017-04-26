@@ -35,12 +35,25 @@ class DisplayProductImage extends ControllerBase {
    */
   protected $productManagerService;
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an example of Dependency Injection. The necessary objects are    **
+ ** being injected through the class's constructor.                          **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * {@inheritdoc}
    */
   public function __construct(ProductManagerServiceInterface $product_manager_service) {
     $this->productManagerService = $product_manager_service;
   }
+
+/******************************************************************************
+ **                                                                          **
+ ** To learn more about Symfony's service container visit:                   **
+ **   http://symfony.com/doc/current/service_container.html                  **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * {@inheritdoc}
    */
@@ -87,25 +100,4 @@ class DisplayProductImage extends ControllerBase {
     }
     return $render_array;
   }
-
-  /**
-   * Page title callback
-   *
-   * @param \Drupal\node\Entity\Node $node
-   *   The fully loaded (translated) node entity
-   * @param integer $delta
-   *   The image instance to load
-   *
-   * @return array $render_array
-   *   The render array
-   */
-  public function pageTitleCallback(Node $node, $delta) {
-    // Note: The Modal API did not handle this render array, which results in
-    //       "Array" showing in the Modal title bar. I have changed the routing
-    //        YAML file to use a static title.
-    return [
-      '#markup' => $this->t('Image @delta for @title', array('@delta' => $delta, '@title' => $node->title->value))
-    ];
-  }
-
 }

@@ -37,6 +37,12 @@ class AquiferUpdate extends QueueWorkerBase implements ContainerFactoryPluginInt
     $this->aquiferManagerService = $aquifer_manager_service;
   }
 
+/******************************************************************************
+ **                                                                          **
+ ** To learn more about Symfony's service container visit:                   **
+ **   http://symfony.com/doc/current/service_container.html                  **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * {@inheritdoc}
    */

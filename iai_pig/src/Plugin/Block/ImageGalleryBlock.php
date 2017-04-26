@@ -13,6 +13,19 @@ use Drupal\iai_product\ProductManagerServiceInterface;
 use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/******************************************************************************
+ **                                                                          **
+ ** The context ensures that the block is present only on node pages.        **
+ **                                                                          **
+ ** Whenever a node is saved it invalidates its cache context and the block  **
+ ** will be rebuilt. We make use of this context in our build method with the**
+ **   <code>$node = $this->getContextValue('node');</code>                   **
+ **                                                                          **
+ ** This block is not intended to be an "all powerful" block to be reused    **
+ ** elsewhere. We are making certain assumptions to keep the example         **
+ ** relatively simple.                                                       **
+ **                                                                          **
+ ******************************************************************************/
 /**
  * Provides an image gallery block.
  *
@@ -28,20 +41,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-
-/******************************************************************************
- **                                                                          **
- ** The context ensures that the block is present only on node pages.        **
- **                                                                          **
- ** Whenever a node is saved it invalidates its cache context and the block  **
- ** will be rebuilt. We make use of this context in our build method with the**
- **   <code>$node = $this->getContextValue('node');</code>                   **
- **                                                                          **
- ** This block is not intended to be an "all powerful" block to be reused    **
- ** elsewhere. We are making certain assumptions to keep the example         **
- ** relatively simple.                                                       **
- **                                                                          **
- ******************************************************************************/
 class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -51,6 +50,12 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
    */
   protected $productManagerService;
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an example of Dependency Injection. The necessary objects are    **
+ ** being injected through the class's constructor.                          **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * Constructs Product Image Gallery block object.
    *
@@ -68,10 +73,29 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->productManagerService = $product_manager_service;
   }
+
+/******************************************************************************
+ **                                                                          **
+ ** To learn more about Symfony's service container visit:                   **
+ **   http://symfony.com/doc/current/service_container.html                  **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+
+/******************************************************************************
+ **                                                                          **
+ ** The ContainerFactoryPluginInterface is what gave us access to Symfony's  **
+ ** service container. Plugins don't get access to the service container if  **
+ ** they don't implement the ContainerFactoryPluginInterface.                **
+ **                                                                          **
+ ** If we plan to do anything in our constructor we need to call the parent  **
+ ** constructor explicitly. Therefore, we need to ensure we've got all the   **
+ ** necessary objects to pass to our parent.                                 **
+ **                                                                          **
+ ******************************************************************************/
     return new static(
       $configuration,
       $plugin_id,
