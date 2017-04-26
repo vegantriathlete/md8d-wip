@@ -40,6 +40,18 @@ class WEAResource extends ResourceBase {
 
 /******************************************************************************
  **                                                                          **
+ ** We have chosen not to use the $nodeStorage service. Instead, we have     **
+ ** opted to use Node:: to perform our operations. It was stricly a personal **
+ ** choice based on our opinion that the code looks cleaner this way. The    **
+ ** entity type manager is already being injected into our constructor anyway**
+ ** and it would have been fine for us to retrieve node storage like         **
+ **   $this->nodeStorage = $entity_type_manager->getStorage('node');         **
+ ** as we have done in other code.                                           **
+ **                                                                          **
+ ******************************************************************************/
+
+/******************************************************************************
+ **                                                                          **
  ** This is an object, not just a language code.                             **
  **                                                                          **
  ******************************************************************************/
