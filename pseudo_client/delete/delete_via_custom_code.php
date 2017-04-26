@@ -36,6 +36,8 @@ $rest_uri = 'http://' . $domain . '/wea/actions/' . $item . '?_format=' . $forma
  **                                                                          **
  ** Drupal (supposedly) requires a token in order to prevent Cross Site      **
  ** Request Forgery.                                                         **
+ ** @see:
+ ** https://www.drupal.org/docs/8/api/restful-web-services-api/restful-web-services-api-overview#fundamentals--x-csrf-token
  **                                                                          **
  ******************************************************************************/
 $tokenRetriever = new tokenRetriever($domain);
