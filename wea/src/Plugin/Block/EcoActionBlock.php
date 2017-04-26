@@ -36,6 +36,12 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
    */
   protected $personalizationIpService;
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an example of Dependency Injection. The necessary objects are    **
+ ** being injected through the class's constructor.                          **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * Constructs an EcoActionBlock object.
    *
@@ -61,6 +67,14 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+
+/******************************************************************************
+ **                                                                          **
+ ** The ContainerFactoryPluginInterface is what gave us access to Symfony's  **
+ ** service container. Plugins don't get access to the service container if  **
+ ** they don't implement the ContainerFactoryPluginInterface.                **
+ **                                                                          **
+ ******************************************************************************/
     return new static(
       $configuration,
       $plugin_id,
