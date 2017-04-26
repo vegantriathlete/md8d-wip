@@ -24,6 +24,12 @@ class AquiferUpdate extends QueueWorkerBase implements ContainerFactoryPluginInt
    */
   protected $aquiferManagerService;
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an example of Dependency Injection. The Aquifer Manager Service  **
+ ** is being injected through the class's constructor.                       **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * Constructs the Queue Worker
    */
@@ -35,6 +41,14 @@ class AquiferUpdate extends QueueWorkerBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+
+/******************************************************************************
+ **                                                                          **
+ ** The ContainerFactoryPluginInterface is what gave us access to Symfony's  **
+ ** service container. Plugins don't get access to the service container if  **
+ ** they don't implement the ContainerFactoryPluginInterface.                **
+ **                                                                          **
+ ******************************************************************************/
     return new static(
       $container->get('aquifer.aquifer_manager_service')
     );

@@ -116,7 +116,7 @@ function aquifer_cron() {
  **                                                                          **
  ** @see:                                                                    **
  ** https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Queue%21QueueInterface.php/function/QueueInterface%3A%3AcreateItem/8.3.x
- ** for more information on create queue items.                              **
+ ** for more information on creating queue items.                            **
  **                                                                          **
  ******************************************************************************/
     $queue->createItem($aquifer_data);

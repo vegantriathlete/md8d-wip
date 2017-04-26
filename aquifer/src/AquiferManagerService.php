@@ -23,6 +23,13 @@ class AquiferManagerService extends AbstractAquiferManagerService implements Aqu
    *   Entity storage for node entities.
    */
   public function __construct(EntityManagerInterface $entity_manager) {
+
+/******************************************************************************
+ **                                                                          **
+ ** Symfony knows to pass the $entity_manager to our constructor because we  **
+ ** specified it as an argument in our iai_aquifer.services.yml.             **
+ **                                                                          **
+ ******************************************************************************/
     $this->nodeStorage = $entity_manager->getStorage('node');
   }
 

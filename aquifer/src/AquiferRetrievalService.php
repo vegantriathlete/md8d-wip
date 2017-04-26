@@ -25,6 +25,7 @@ class AquiferRetrievalService implements AquiferRetrievalServiceInterface {
    * @param string $rest_endpoint
    *   The base REST endpoint to call
    */
+  public function __construct(string $rest_endpoint) {
 
 /******************************************************************************
  **                                                                          **
@@ -32,7 +33,6 @@ class AquiferRetrievalService implements AquiferRetrievalServiceInterface {
  ** specified it as an argument in our iai_aquifer.services.yml.             **
  **                                                                          **
  ******************************************************************************/
-  public function __construct(string $rest_endpoint) {
     $this->restEndpoint = $rest_endpoint;
   }
 

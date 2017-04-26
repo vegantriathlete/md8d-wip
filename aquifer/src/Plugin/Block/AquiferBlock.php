@@ -26,6 +26,12 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
    */
   protected $nodeStorage;
 
+/******************************************************************************
+ **                                                                          **
+ ** This is an example of Dependency Injection. The necessary objects are    **
+ ** being injected through the class's constructor.                          **
+ **                                                                          **
+ ******************************************************************************/
   /**
    * Constructs an AquiferBlock object.
    *
@@ -62,6 +68,14 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+
+/******************************************************************************
+ **                                                                          **
+ ** The ContainerFactoryPluginInterface is what gave us access to Symfony's  **
+ ** service container. Plugins don't get access to the service container if  **
+ ** they don't implement the ContainerFactoryPluginInterface.                **
+ **                                                                          **
+ ******************************************************************************/
     return new static(
       $configuration,
       $plugin_id,
@@ -138,9 +152,9 @@ class AquiferBlock extends BlockBase implements ContainerFactoryPluginInterface 
 /******************************************************************************
  **                                                                          **
  ** We don't really need to worry about expiring the cache because we've got **
- ** only three aquifers. But, we are going to set the meta data so that when **
- ** pieces of content are updated we make sure to rebuild this block.        **
- ** You can learn more about the Cache API in the Appendix.                  **
+ ** only three aquifers. Nonethless, we are going to set the meta data so    **
+ ** that when pieces of content are updated we make sure to rebuild this     **
+ ** block. You can learn more about the Cache API in the Appendix.           **
  **                                                                          **
  ******************************************************************************/
       $build['#cache']['tags'][] = 'node_list';
