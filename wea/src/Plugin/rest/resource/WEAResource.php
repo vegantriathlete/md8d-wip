@@ -392,7 +392,9 @@ class WEAResource extends ResourceBase {
  **                                                                          **
  ******************************************************************************/
 
+    // Are we able to successfully load a node with that ID?
     if ($node = Node::load($id)) {
+      // Is the client attempting to update a Water Eco Action item?
       if ($node->getType() != 'water_eco_action') {
         throw new BadRequestHttpException('You have not requested a Water Eco Action item.');
       }
@@ -406,7 +408,15 @@ class WEAResource extends ResourceBase {
       if (!$node->access('delete')) {
         throw new AccessDeniedHttpException();
       }
+      // Is the client deleting a particular translation?
       if ($node->hasTranslation($this->currentLanguage->getId())) {
+
+/******************************************************************************
+ **                                                                          **
+ ** The DELETE verb does not pass any fields. We need to look at the language**
+ ** of the interface.                                                        **
+ **                                                                          **
+ ******************************************************************************/
         $translated_node = $node->getTranslation($this->currentLanguage->getId());
       }
       else {
@@ -425,5 +435,4 @@ class WEAResource extends ResourceBase {
     }
     throw new NotFoundHttpException(t('Water eco action item with ID @id was not found', array('@id' => $id)));
   }
-
 }
