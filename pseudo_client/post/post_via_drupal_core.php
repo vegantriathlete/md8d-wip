@@ -63,9 +63,9 @@ $token = $tokenRetriever->getToken();
 $curlExecutor = new curlExecutor($rest_uri, $token, $post_fields);
 $result = $curlExecutor->postFields();
 if ($format == 'xml') {
-  $decoded_results = new SimpleXMLElement($results);
+  $decoded_result = new SimpleXMLElement($result);
 } else {
-  $decoded_results = json_decode($results);
+  $decoded_result = json_decode($result);
 }
 
 /******************************************************************************

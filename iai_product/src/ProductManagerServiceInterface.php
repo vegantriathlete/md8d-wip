@@ -21,6 +21,7 @@ interface ProductManagerServiceInterface {
    *   The fully loaded Product
    *
    * @return array $imageData 
+   *   An array of all the image data for imate type fields.
    */
   public function retrieveProductImages(NodeInterface $product);
 }

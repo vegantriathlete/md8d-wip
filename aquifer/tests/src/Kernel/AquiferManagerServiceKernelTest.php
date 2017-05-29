@@ -17,7 +17,14 @@ class AquiferManagerServiceKernelTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['aquifer', 'content_translation', 'language', 'menu_ui', 'node', 'options'];
+  public static $modules = [
+    'aquifer',
+    'content_translation',
+    'language',
+    'menu_ui',
+    'node',
+    'options'
+  ];
 
   /**
    * {@inheritdoc}

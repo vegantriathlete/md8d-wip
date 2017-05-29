@@ -9,6 +9,13 @@
 $domain = $_GET['domain'];
 $item = $_GET['item'];
 
+// See if a particular format was requested
+if (isset($_GET['format'])) {
+  $format = $_GET['format'];
+}  else {
+  $format = 'json';
+}
+
 /******************************************************************************
  **                                                                          **
  ** Note that we are appending the _format query argument. This tells the    **
@@ -23,7 +30,7 @@ $item = $_GET['item'];
  **  }                                                                       **
  **                                                                          **
  ******************************************************************************/
-$rest_uri = 'http://' . $domain . '/wea/actions/' . $item . '?_format=json';
+$rest_uri = 'http://' . $domain . '/wea/actions/' . $item . '?_format=' . $format;
 
 // Execute a cURL call
 $curlExecutor = new curlExecutor($rest_uri);

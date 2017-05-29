@@ -89,7 +89,7 @@ class DisplayProductImage extends ControllerBase {
         '#theme' => 'image_style',
         '#uri' => $file->getFileUri(),
         '#style_name' => 'product_large',
-        '#alt' => $image_data['alt'],
+        '#alt' => $productImages[$delta]['alt'],
       );
     }
     else {

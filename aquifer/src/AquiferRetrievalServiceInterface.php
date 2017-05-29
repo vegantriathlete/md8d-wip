@@ -41,7 +41,7 @@ interface AquiferRetrievalServiceInterface {
    * @param string $region
    *   Region to which to limit the search
    *
-   * @return integer
+   * @return int
    *   The number of tracked aquifers
    */
   public function getTotalAquifers($region = 'ALL');
@@ -69,7 +69,7 @@ interface AquiferRetrievalServiceInterface {
   /**
    * Retrieve the current data for a given aquifer
    *
-   * @param string $aquifer
+   * @param string $name
    *   The name of the acquifer for which the data is being retrieved
    *
    * @return array

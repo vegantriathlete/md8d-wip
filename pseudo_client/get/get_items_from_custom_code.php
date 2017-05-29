@@ -7,6 +7,13 @@
  ******************************************************************************/
 $domain = $_GET['domain'];
 
+// See if a particular format was requested
+if (isset($_GET['format'])) {
+  $format = $_GET['format'];
+}  else {
+  $format = 'json';
+}
+
 /******************************************************************************
  **                                                                          **
  ** Note that we are appending the _format query argument. This tells the    **
@@ -20,7 +27,7 @@ $domain = $_GET['domain'];
  **  }                                                                       **
  **                                                                          **
  ******************************************************************************/
-$rest_uri = 'http://' . $domain . '/wea/actions?_format=json';
+$rest_uri = 'http://' . $domain . '/wea/actions?_format=' . $format;
 
 // Execute a cURL call
 $curlExecutor = new curlExecutor($rest_uri);

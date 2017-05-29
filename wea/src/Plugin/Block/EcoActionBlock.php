@@ -51,8 +51,8 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
-   *   Entity storage for node entities.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    * @param \Drupal\personalization\PersonalizationIpServiceInterface $personalization_ip_service
    *   The personalization Ip Service.
    */
@@ -159,7 +159,7 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
 
       $build['ip_address_and_radius'] = [
         '#type' => 'markup',
-        '#markup' => t('Eco actions within @radius kilometers of @coordinates [@ipaddress]', array('@radius' => $radius, '@ipaddress' => $ip, '@coordinates' => $coordinates)),
+        '#markup' => $this->t('Eco actions within @radius kilometers of @coordinates [@ipaddress]', array('@radius' => $radius, '@ipaddress' => $ip, '@coordinates' => $coordinates)),
       ];
       $build['list'] = [
         '#theme' => 'item_list',
@@ -176,7 +176,7 @@ class EcoActionBlock extends BlockBase implements ContainerFactoryPluginInterfac
     else {
       $build['no_items'] = [
         '#type' => 'markup',
-        '#markup' => t('There are no actions in your area.'),
+        '#markup' => $this->t('There are no actions in your area.'),
       ];
     }
     $build['#cache']['tags'][] = 'node_list';

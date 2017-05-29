@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Install, update and uninstall functions for the aquifer module.
+ */
+
+/**
  * Implements hook_install().
  *
  * @see: https://www.drupal.org/node/2599228

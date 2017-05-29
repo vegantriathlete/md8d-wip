@@ -30,6 +30,7 @@ class AquiferManagerServiceTest extends UnitTestCase {
    * Provides good data for adding aquifers
    *
    * @return array
+   *   The data to use to test good aquifer input
    */
   public function provideGoodCreateAquiferData () {
     return [
@@ -109,6 +110,7 @@ class AquiferManagerServiceTest extends UnitTestCase {
    * Provides data that is missing fields for adding aquifers
    *
    * @return array
+   *   The data to use for aquifers with missing data
    */
   public function provideMissingAquiferData () {
     return [
@@ -183,6 +185,7 @@ class AquiferManagerServiceTest extends UnitTestCase {
    * Provides bad data for adding aquifers
    *
    * @return array
+   *   The data to use for aquifers with undefined fields
    */
   public function provideBadAquiferData () {
     return [
@@ -267,6 +270,7 @@ class AquiferManagerServiceTest extends UnitTestCase {
    * Provides good data for updating aquifers
    *
    * @return array
+   *   The good data to use for updating aquifers
    */
   public function provideGoodUpdateAquiferData () {
     return [

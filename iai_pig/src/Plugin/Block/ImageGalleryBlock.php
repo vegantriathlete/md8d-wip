@@ -65,8 +65,7 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\iai_product\ProductManagerServiceInterface
-   *   $product_manager_service
+   * @param \Drupal\iai_product\ProductManagerServiceInterface $product_manager_service
    *   The Product Manager Service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ProductManagerServiceInterface $product_manager_service) {
@@ -276,7 +275,7 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
    * @return \Drupal\node\Entity\Node $product
    *   The fully loaded referenced product
    */
-  private function getReferencedProduct($node) {
+  private function getReferencedProduct(Node $node) {
 
 /******************************************************************************
  **                                                                          **

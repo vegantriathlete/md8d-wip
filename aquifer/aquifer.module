@@ -5,6 +5,7 @@
  * Used to manage aquifer content.
  */
 
+use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /******************************************************************************
@@ -134,7 +135,7 @@ function aquifer_cron() {
  * @param array $delete_list
  *   The list of aquifer names to delete
  */
-function aquifer_delete_queued_updates($queue, $delete_list) {
+function aquifer_delete_queued_updates(QueueInterface $queue, $delete_list) {
 
 /******************************************************************************
  **                                                                          **

@@ -21,7 +21,7 @@ class PlaceEcoActionBlockFunctionalTest extends BrowserTestBase {
   /**
    * Tests that the block retrieves all three water eco actions.
    */
-  public function testWEABlockListing() {
+  public function testWeaBlockListing() {
 
     // Create some water eco action pieces of content
     $this->drupalCreateNode(array(
@@ -52,7 +52,7 @@ class PlaceEcoActionBlockFunctionalTest extends BrowserTestBase {
   /**
    * Tests that the empty block displays a message.
    */
-  public function testWEAEmptyBlockListing() {
+  public function testWeaEmptyBlockListing() {
 
     // Place the Aquifer block
     $this->drupalPlaceBlock('eco_action_block');

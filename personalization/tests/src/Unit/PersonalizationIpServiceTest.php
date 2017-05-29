@@ -73,6 +73,7 @@ class PersonalizationIpServiceTest extends UnitTestCase {
    * Provides Ip Addresses to test
    *
    * @return array
+   *   The data to test for Ip Addresses
    */
   public function provideIpAddresses () {
     return [

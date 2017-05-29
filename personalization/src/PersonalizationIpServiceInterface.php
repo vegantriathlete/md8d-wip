@@ -3,8 +3,7 @@
 namespace Drupal\personalization;
 
 /**
- * Defines an interface that provides functionality to personalize content
- * based on Ip Address.
+ * Defines an interface to personalize content based on Ip Address.
  */
 interface PersonalizationIpServiceInterface {
 
