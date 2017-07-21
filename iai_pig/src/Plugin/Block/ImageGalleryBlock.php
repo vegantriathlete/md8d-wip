@@ -4,6 +4,7 @@ namespace Drupal\iai_pig\Plugin\Block;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -50,6 +51,13 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
    */
   protected $productManagerService;
 
+  /**
+   * The entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
 /******************************************************************************
  **                                                                          **
  ** This is an example of Dependency Injection. The necessary objects are    **
@@ -67,10 +75,13 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
    *   The plugin implementation definition.
    * @param \Drupal\iai_product\ProductManagerServiceInterface $product_manager_service
    *   The Product Manager Service.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ProductManagerServiceInterface $product_manager_service) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ProductManagerServiceInterface $product_manager_service, EntityRepositoryInterface $entity_repository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->productManagerService = $product_manager_service;
+    $this->entityRepository = $entity_repository;
   }
 
 /******************************************************************************
@@ -99,7 +110,8 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('iai_product.product_manager_service')
+      $container->get('iai_product.product_manager_service'),
+      $container->get('entity.repository')
     );
   }
 
@@ -146,10 +158,6 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
  ** https://api.drupal.org/api/drupal/core!lib!Drupal!Component!Plugin!ContextAwarePluginBase.php/function/ContextAwarePluginBase%3A%3AgetContextValue/8.2.x
  **                                                                          **
  ******************************************************************************/
-    // @todo: I think I need to change this to the translated node after I
-    //        receive it. See related todo below. When I'm on the book page
-    //        things get messed up with the spanish version. When I'm on the
-    //        product page it works fine with the spanish version.
     $node = $this->getContextValue('node');
 
     // Determine if we are on a page that points to a product.
@@ -260,7 +268,7 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
       // Check if this node references a Product
       $product = $this->getReferencedProduct($node);
 
-      return $product;
+      return $this->entityRepository->getTranslationFromContext($product);
     }
     else {
       return NULL;
@@ -285,9 +293,6 @@ class ImageGalleryBlock extends BlockBase implements ContainerFactoryPluginInter
  **                                                                          **
  ******************************************************************************/
     if (isset($node->field_product)) {
-      // @todo: Determine if we've got a bug with not using the translated
-      //        node, which results in the referenced entities being
-      //        incorrect. I'm not sure if it's our bug or Drupal's bug.
       $referenced_entities = $node->field_product->referencedEntities();
       $product = $referenced_entities[0];
       return $product;
